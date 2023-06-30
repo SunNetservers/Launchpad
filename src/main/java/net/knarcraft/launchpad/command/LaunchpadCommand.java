@@ -19,8 +19,6 @@ public class LaunchpadCommand implements CommandExecutor {
             return false;
         }
 
-        // TODO: Add an abort action to clear the player's modification requests
-
         // TODO: Properly allow nulling (unsetting) values
 
         if (arguments.length < 1) {
@@ -44,6 +42,12 @@ public class LaunchpadCommand implements CommandExecutor {
             case ADD, REMOVE -> request = new ModificationRequest(action, null);
             case VERTICAL_VELOCITY, HORIZONTAL_VELOCITY, FIXED_DIRECTION ->
                     request = new ModificationRequest(action, arguments[1]);
+            case ABORT -> {
+                // Retrieving modification requests also removes them
+                ModificationRequestHandler.getRequests(player.getUniqueId());
+                commandSender.sendMessage("Launchpad modifications cleared");
+                return true;
+            }
         }
         ModificationRequestHandler.addRequest(player.getUniqueId(), request);
         commandSender.sendMessage("Right-click the block to modify launchpad properties for");

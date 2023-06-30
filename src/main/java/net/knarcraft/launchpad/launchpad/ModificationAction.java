@@ -33,6 +33,11 @@ public enum ModificationAction {
      * The action of setting the fixed direction of a launchpad
      */
     FIXED_DIRECTION("fixedDirection", true),
+
+    /**
+     * The action of aborting previous actions
+     */
+    ABORT("abort", false),
     ;
 
     private final @NotNull String commandName;
