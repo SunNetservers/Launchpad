@@ -4,6 +4,7 @@ import net.knarcraft.launchpad.Launchpad;
 import net.knarcraft.launchpad.config.LaunchpadConfiguration;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlock;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -44,7 +45,7 @@ public class LaunchpadUseListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
-        if (event.getTo() == null || event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+        if (event.getTo() == null || isSameLocation(event.getFrom(), event.getTo())) {
             return;
         }
 
@@ -52,7 +53,7 @@ public class LaunchpadUseListener implements Listener {
         // block below has to be checked instead.
         Block block = event.getTo().getBlock();
         if (block.getType().isAir()) {
-            block = block.getRelative(BlockFace.DOWN);
+            block = event.getTo().clone().subtract(0, 0.2, 0).getBlock();
             // Only trigger hit detection for passable blocks if the player is in the block
             if (block.isPassable()) {
                 return;
@@ -121,6 +122,18 @@ public class LaunchpadUseListener implements Listener {
         direction = direction.multiply(horizontalVelocity);
         direction = direction.add(new Vector(0, verticalVelocity, 0));
         player.setVelocity(direction);
+    }
+
+    /**
+     * Checks if two locations are the same, excluding rotation
+     *
+     * @param location1 <p>The first location to check</p>
+     * @param location2 <p>The second location to check</p>
+     * @return <p>True if the locations are the same, excluding rotation</p>
+     */
+    private boolean isSameLocation(Location location1, Location location2) {
+        return location1.getX() == location2.getX() && location1.getY() == location2.getY() &&
+                location1.getZ() == location2.getZ();
     }
 
 }
