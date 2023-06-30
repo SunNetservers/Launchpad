@@ -4,9 +4,9 @@ launchpad:
   materials:
     - LIGHT_WEIGHTED_PRESSURE_PLATE # This is the gold pressure plate
     - HEAVY_WEIGHTED_PRESSURE_PLATE # This is the iron pressure plate
-  # The default vertical (upwards) velocity set for a player
+  # The default vertical (upwards) velocity for all launchpads
   verticalVelocity: 0.2
-  # The default horizontal (outwards) velocity set for a player
+  # The default horizontal (outwards) velocity for all launchpads
   horizontalVelocity: 0.5
   # Default velocities for specific launchpad materials. You can use this to set up different velocities for each type
   # of pressure plate or other material.
