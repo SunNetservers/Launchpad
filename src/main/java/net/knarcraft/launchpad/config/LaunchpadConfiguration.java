@@ -1,0 +1,106 @@
+package net.knarcraft.launchpad.config;
+
+import net.knarcraft.launchpad.Launchpad;
+import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
+import net.knarcraft.launchpad.util.MaterialHelper;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+
+/**
+ * The configuration for this plugin
+ */
+public class LaunchpadConfiguration {
+
+    private @NotNull FileConfiguration fileConfiguration;
+    private double horizontalVelocity;
+    private double verticalVelocity;
+    private final @NotNull Set<Material> launchpadMaterials = new HashSet<>();
+
+    /**
+     * Instantiate a new launch pad configuration
+     *
+     * @param fileConfiguration <p>The file configuration to use</p>
+     */
+    public LaunchpadConfiguration(@NotNull FileConfiguration fileConfiguration) {
+        this.fileConfiguration = fileConfiguration;
+        load(fileConfiguration);
+    }
+
+    /**
+     * Loads this configuration from the given file configuration
+     *
+     * @param fileConfiguration <p>The file configuration to load</p>
+     */
+    public void load(@NotNull FileConfiguration fileConfiguration) {
+        this.fileConfiguration = fileConfiguration;
+        ConfigurationSection launchpadSection = fileConfiguration.getConfigurationSection("launchpad");
+        if (launchpadSection == null) {
+            Launchpad.log(Level.WARNING, "Unable to load launchpad configuration. " +
+                    "The \"launchpad\" configuration section is missing.");
+            return;
+        }
+        this.launchpadMaterials.clear();
+        List<?> materials = launchpadSection.getList("materials");
+        if (materials != null) {
+            this.launchpadMaterials.addAll(MaterialHelper.loadMaterialList(materials));
+        } else {
+            this.launchpadMaterials.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
+        }
+        // If a non-block material is specified, simply ignore it
+        this.launchpadMaterials.removeIf((item) -> !item.isBlock());
+
+        this.horizontalVelocity = launchpadSection.getDouble("horizontalVelocity");
+        this.verticalVelocity = launchpadSection.getDouble("verticalVelocity");
+
+        // Load launchpad blocks
+        LaunchpadBlockHandler.loadAll();
+    }
+
+    /**
+     * Checks whether the given material is not used for launch pads
+     *
+     * @param material <p>The material to check</p>
+     * @return <p>True if the given material is not used for launchpads</p>
+     */
+    public boolean isNotLaunchpadMaterial(@NotNull Material material) {
+        return !this.launchpadMaterials.contains(material);
+    }
+
+    /**
+     * Gets the default horizontal velocity for launchpads
+     *
+     * @param material <p>The material of the launchpad</p>
+     * @return <p>The default horizontal velocity</p>
+     */
+    public double getHorizontalVelocity(@NotNull Material material) {
+        double materialVelocity = fileConfiguration.getDouble(
+                String.format("launchpad.materialVelocities.%s.horizontalVelocity", material.name()), -1);
+        if (materialVelocity >= 0) {
+            return materialVelocity;
+        }
+        return Math.max(this.horizontalVelocity, 0);
+    }
+
+    /**
+     * Gets the default vertical velocity for launchpads
+     *
+     * @param material <p>The material of the launchpad</p>
+     * @return <p>The default vertical velocity</p>
+     */
+    public double getVerticalVelocity(@NotNull Material material) {
+        double materialVelocity = fileConfiguration.getDouble(
+                String.format("launchpad.materialVelocities.%s.verticalVelocity", material.name()), -1);
+        if (materialVelocity >= 0) {
+            return materialVelocity;
+        }
+        return Math.max(this.verticalVelocity, 0);
+    }
+
+}

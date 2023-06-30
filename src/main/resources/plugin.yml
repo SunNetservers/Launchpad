@@ -1,0 +1,36 @@
+name: Launchpad
+version: '${project.version}'
+main: net.knarcraft.launchpad.Launchpad
+api-version: '1.20'
+author: EpicKnarvik97
+description: A plugin that adds customizable launchpads to the game
+website: https://git.knarcraft.net
+
+commands:
+  reload:
+    usage: /<command>
+    description: Used to reload the Launchpad plugin
+    permission: launchpad.reload
+  launchpad:
+    usage: /<command> <add|remove|verticalVelocity|horizontalVelocity|fixedDirection> [value]
+    description: Used to alter launchpads
+    permission: launchpad.modify
+
+permissions:
+  launchpad.*:
+    default: false
+    description: Alias of launchpad.admin
+    children:
+      - launchpad.admin
+  launchpad.admin:
+    default: op
+    description: Gives all permissions
+    children:
+      - launchpad.reload
+      - launchpad.modify
+  launchpad.reload:
+    default: false
+    description: Allows reloading Launchpad
+  launchpad.modify:
+    default: false
+    description: Allows adding and modifying launchpads
