@@ -53,6 +53,10 @@ public class LaunchpadUseListener implements Listener {
         Block block = event.getTo().getBlock();
         if (block.getType().isAir()) {
             block = block.getRelative(BlockFace.DOWN);
+            // Only trigger hit detection for passable blocks if the player is in the block
+            if (block.isPassable()) {
+                return;
+            }
         }
 
         // Pressure plates are detected in onPressurePlateUse instead
@@ -68,19 +72,10 @@ public class LaunchpadUseListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        double velocity = player.getVelocity().getY();
-        // These are constants for the velocity of a player when landing from a jump and just walking respectively.
-        // When flying, the Y velocity is always 0.
-        double LANDING_Y_VELOCITY = -0.22768848754498797;
-        double DEFAULT_Y_VELOCITY = -0.0784000015258789;
-        // Make sure not to trigger until the player touches the block. This doesn't work if the player is flying.
-        if (!player.isFlying() && (velocity != LANDING_Y_VELOCITY && velocity != DEFAULT_Y_VELOCITY)) {
-            return;
-        }
 
         // Launch the player
         if (launchpad != null) {
-            launch(event.getPlayer(), launchpad);
+            launch(player, launchpad);
         } else {
             launch(player, type);
         }
