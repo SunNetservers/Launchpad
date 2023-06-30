@@ -1,5 +1,5 @@
 launchpad:
-  # A list of all materials used as a launch-pad. Use +PRESSURE_PLATES for all pressure plates, or 
+  # A list of all materials automatically enabled as a launch-pad. Use +PRESSURE_PLATES for all pressure plates, or 
   # +WOODEN_PRESSURE_PLATES for all wooden pressure plates.
   materials:
     - LIGHT_WEIGHTED_PRESSURE_PLATE # This is the gold pressure plate

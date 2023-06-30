@@ -79,11 +79,13 @@ public enum ModificationAction {
      * @return <p>True if the argument is valid</p>
      */
     public boolean isValidArgument(String argument) {
+        if (argument.equalsIgnoreCase("null")) {
+            return true;
+        }
         if (this == ModificationAction.HORIZONTAL_VELOCITY || this == ModificationAction.VERTICAL_VELOCITY) {
             try {
-                double ignored = Double.parseDouble(argument);
-                return true;
-            } catch (NullPointerException exception) {
+                return Double.parseDouble(argument) >= 0;
+            } catch (NumberFormatException exception) {
                 return false;
             }
         } else if (this == ModificationAction.FIXED_DIRECTION) {

@@ -96,8 +96,8 @@ public final class LaunchpadBlockHandler {
                     block.getX() + "," + block.getY() + "," + block.getZ();
             ConfigurationSection launchpadSection = launchpadsSection.createSection(locationString);
             LaunchpadBlock launchpadBlock = launchpadBlocks.get(block);
-            launchpadSection.set("verticalVelocity", launchpadBlock.getVerticalVelocity());
-            launchpadSection.set("horizontalVelocity", launchpadBlock.getHorizontalVelocity());
+            launchpadSection.set("verticalVelocity", launchpadBlock.getVerticalVelocityRaw());
+            launchpadSection.set("horizontalVelocity", launchpadBlock.getHorizontalVelocityRaw());
             launchpadSection.set("fixedDirection", launchpadBlock.getFixedDirection() != null ?
                     launchpadBlock.getFixedDirection().name() : null);
         }

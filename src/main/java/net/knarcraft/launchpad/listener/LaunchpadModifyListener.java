@@ -64,16 +64,22 @@ public class LaunchpadModifyListener implements Listener {
             case VERTICAL_VELOCITY -> {
                 if (request.value() != null) {
                     existingLaunchpad.setVerticalVelocity(Double.parseDouble(request.value()));
+                } else {
+                    existingLaunchpad.setVerticalVelocity(-1);
                 }
             }
             case HORIZONTAL_VELOCITY -> {
                 if (request.value() != null) {
                     existingLaunchpad.setHorizontalVelocity(Double.parseDouble(request.value()));
+                } else {
+                    existingLaunchpad.setHorizontalVelocity(-1);
                 }
             }
             case FIXED_DIRECTION -> {
                 if (request.value() != null) {
                     existingLaunchpad.setFixedDirection(BlockFace.valueOf(request.value().toUpperCase()));
+                } else {
+                    existingLaunchpad.setFixedDirection(null);
                 }
             }
         }

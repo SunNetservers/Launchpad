@@ -35,13 +35,12 @@ public class LaunchpadCommand implements CommandExecutor {
             return false;
         }
 
-
         // Register the modification request
         ModificationRequest request = null;
         switch (action) {
             case ADD, REMOVE -> request = new ModificationRequest(action, null);
-            case VERTICAL_VELOCITY, HORIZONTAL_VELOCITY, FIXED_DIRECTION ->
-                    request = new ModificationRequest(action, arguments[1]);
+            case VERTICAL_VELOCITY, HORIZONTAL_VELOCITY, FIXED_DIRECTION -> request = new ModificationRequest(action,
+                    arguments[1].equalsIgnoreCase("null") ? null : arguments[1]);
             case ABORT -> {
                 // Retrieving modification requests also removes them
                 ModificationRequestHandler.getRequests(player.getUniqueId());

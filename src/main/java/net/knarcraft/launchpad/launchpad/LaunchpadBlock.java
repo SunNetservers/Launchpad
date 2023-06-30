@@ -94,7 +94,7 @@ public class LaunchpadBlock {
      * @param horizontalVelocity <p>The horizontal velocity to set</p>
      */
     public void setHorizontalVelocity(double horizontalVelocity) {
-        this.horizontalVelocity = Math.max(0, horizontalVelocity);
+        this.horizontalVelocity = horizontalVelocity;
     }
 
     /**
@@ -103,7 +103,7 @@ public class LaunchpadBlock {
      * @param verticalVelocity <p>The vertical velocity to set</p>
      */
     public void setVerticalVelocity(double verticalVelocity) {
-        this.verticalVelocity = Math.max(0, verticalVelocity);
+        this.verticalVelocity = verticalVelocity;
     }
 
     /**
@@ -114,11 +114,29 @@ public class LaunchpadBlock {
     public void setFixedDirection(@Nullable BlockFace fixedDirection) {
         // Make sure the fixed direction is in the correct plane by multiplying it by the normal vector to the 
         // North x West plane.
-        if (fixedDirection != null && (fixedDirection.getDirection().dot(BlockFace.WEST.getDirection().crossProduct(
-                BlockFace.NORTH.getDirection()))) != 0) {
+        if (fixedDirection != null && ((fixedDirection.getDirection().dot(BlockFace.WEST.getDirection().crossProduct(
+                BlockFace.NORTH.getDirection()))) != 0 || fixedDirection == BlockFace.SELF)) {
             return;
         }
         this.fixedDirection = fixedDirection;
+    }
+
+    /**
+     * Gets the actual horizontal velocity specified for this block, with no fallback
+     *
+     * @return <p>The raw horizontal velocity</p>
+     */
+    public double getHorizontalVelocityRaw() {
+        return this.horizontalVelocity;
+    }
+
+    /**
+     * Gets the actual vertical velocity specified for this block, with no fallback
+     *
+     * @return <p>The raw vertical velocity</p>
+     */
+    public double getVerticalVelocityRaw() {
+        return this.verticalVelocity;
     }
 
 }
