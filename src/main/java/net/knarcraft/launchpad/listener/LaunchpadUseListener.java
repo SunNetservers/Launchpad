@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A listener for any
@@ -90,7 +90,7 @@ public class LaunchpadUseListener implements Listener {
      */
     private void launch(@NotNull Player player, @NotNull Material material) {
         LaunchpadConfiguration configuration = Launchpad.getInstance().getConfiguration();
-        launch(player, player.getFacing(), configuration.getHorizontalVelocity(material),
+        launch(player, null, configuration.getHorizontalVelocity(material),
                 configuration.getVerticalVelocity(material));
     }
 
@@ -101,25 +101,29 @@ public class LaunchpadUseListener implements Listener {
      * @param launchpadBlock <p>The launchpad the player hit</p>
      */
     private void launch(@NotNull Player player, @NotNull LaunchpadBlock launchpadBlock) {
-        BlockFace directionFace = launchpadBlock.getFixedDirection();
-        if (directionFace == null) {
-            directionFace = player.getFacing();
+        Vector direction = null;
+        // Use the fixed direction if set
+        if (launchpadBlock.getFixedDirection() != null) {
+            direction = launchpadBlock.getFixedDirection().getDirection();
         }
-        launch(player, directionFace, launchpadBlock.getHorizontalVelocity(), launchpadBlock.getVerticalVelocity());
+        launch(player, direction, launchpadBlock.getHorizontalVelocity(), launchpadBlock.getVerticalVelocity());
     }
 
     /**
      * Launches a player that hit a launchpad
      *
      * @param player             <p>The player that hit the launchpad</p>
-     * @param directionFace      <p>The direction to launch the player</p>
+     * @param direction          <p>The direction to launch the player</p>
      * @param horizontalVelocity <p>The horizontal velocity to apply to the player</p>
      * @param verticalVelocity   <p>The vertical velocity to apply to the player</p>
      */
-    private void launch(@NotNull Player player, @NotNull BlockFace directionFace, double horizontalVelocity,
+    private void launch(@NotNull Player player, @Nullable Vector direction, double horizontalVelocity,
                         double verticalVelocity) {
-        Vector direction = directionFace.getDirection();
-        direction = direction.multiply(horizontalVelocity);
+        // Calculate the player's direction if not fixed
+        if (direction == null) {
+            direction = player.getLocation().getDirection().multiply(new Vector(1, 0, 1));
+        }
+        direction = direction.normalize().multiply(horizontalVelocity);
         direction = direction.add(new Vector(0, verticalVelocity, 0));
         player.setVelocity(direction);
     }
