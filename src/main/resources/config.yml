@@ -4,6 +4,10 @@ launchpad:
   materials:
     - LIGHT_WEIGHTED_PRESSURE_PLATE # This is the gold pressure plate
     - HEAVY_WEIGHTED_PRESSURE_PLATE # This is the iron pressure plate
+  # A whitelist for the materials that can be manually set as a launchpad. If non-empty, only the materials listed can
+  # be clicked after executing "/launchpad add" or a different launchpad-editing command. As with materials, this
+  # supports tags like +PRESSURE_PLATES
+  materialWhitelist: [ ]
   # The default vertical (upwards) velocity for all launchpads
   verticalVelocity: 0.2
   # The default horizontal (outwards) velocity for all launchpads

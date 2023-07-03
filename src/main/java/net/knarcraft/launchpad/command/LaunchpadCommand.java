@@ -19,8 +19,6 @@ public class LaunchpadCommand implements CommandExecutor {
             return false;
         }
 
-        // TODO: Properly allow nulling (unsetting) values
-
         if (arguments.length < 1) {
             return false;
         }

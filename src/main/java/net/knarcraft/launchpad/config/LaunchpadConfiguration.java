@@ -21,7 +21,8 @@ public class LaunchpadConfiguration {
     private @NotNull FileConfiguration fileConfiguration;
     private double horizontalVelocity;
     private double verticalVelocity;
-    private final @NotNull Set<Material> launchpadMaterials = new HashSet<>();
+    private @NotNull Set<Material> launchpadMaterials = new HashSet<>();
+    private @NotNull Set<Material> materialWhitelist = new HashSet<>();
 
     /**
      * Instantiate a new launch pad configuration
@@ -46,15 +47,9 @@ public class LaunchpadConfiguration {
                     "The \"launchpad\" configuration section is missing.");
             return;
         }
-        this.launchpadMaterials.clear();
-        List<?> materials = launchpadSection.getList("materials");
-        if (materials != null) {
-            this.launchpadMaterials.addAll(MaterialHelper.loadMaterialList(materials));
-        } else {
-            this.launchpadMaterials.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
-        }
-        // If a non-block material is specified, simply ignore it
-        this.launchpadMaterials.removeIf((item) -> !item.isBlock());
+
+        this.launchpadMaterials = loadMaterials(launchpadSection, "materials");
+        this.materialWhitelist = loadMaterials(launchpadSection, "materialWhitelist");
 
         this.horizontalVelocity = launchpadSection.getDouble("horizontalVelocity");
         this.verticalVelocity = launchpadSection.getDouble("verticalVelocity");
@@ -71,6 +66,16 @@ public class LaunchpadConfiguration {
      */
     public boolean isNotLaunchpadMaterial(@NotNull Material material) {
         return !this.launchpadMaterials.contains(material);
+    }
+
+    /**
+     * Checks whether the given material is whitelisted
+     *
+     * @param material <p>The material to check</p>
+     * @return <p>True if the material is whitelisted</p>
+     */
+    public boolean isMaterialWhitelisted(@NotNull Material material) {
+        return this.materialWhitelist.isEmpty() || this.materialWhitelist.contains(material);
     }
 
     /**
@@ -101,6 +106,25 @@ public class LaunchpadConfiguration {
             return materialVelocity;
         }
         return Math.max(this.verticalVelocity, 0);
+    }
+
+    /**
+     * Loads a list of materials as a set
+     *
+     * @param launchpadSection <p>The configuration section to read</p>
+     * @param key              <p>The configuration key containing the materials</p>
+     * @return <p>The loaded materials as a set</p>
+     */
+    private Set<Material> loadMaterials(ConfigurationSection launchpadSection, String key) {
+        Set<Material> loadedMaterials = new HashSet<>();
+        List<?> materialWhitelist = launchpadSection.getList(key);
+        if (materialWhitelist != null) {
+            loadedMaterials.addAll(MaterialHelper.loadMaterialList(materialWhitelist));
+        }
+        // If a non-block material is specified, simply ignore it
+        loadedMaterials.removeIf((item) -> !item.isBlock());
+
+        return loadedMaterials;
     }
 
 }

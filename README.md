@@ -32,10 +32,11 @@ If you alter several launchpad values in succession, they'll all be applied to t
 
 ## Configuration
 
-| Node                                                       | Type           | Description                                                                                                  |
-|------------------------------------------------------------|----------------|--------------------------------------------------------------------------------------------------------------|
-| launchpad.materials                                        | List           | A list of materials which are always treated as launchpads, without the need for manual registration.        |
-| launchpad.verticalVelocity                                 | Decimal number | The vertical (upwards) velocity applied to launchpads if not specified otherwise.                            |
-| launchpad.horizontalVelocity                               | Decimal number | The horizontal (sideways) velocity applied to launchpads if not specified otherwise.                         |
-| launchpad.materialVelocities.<MATERIAL>.horizontalVelocity | Decimal number | The horizontal (sideways) velocity applied to launchpads of type <MATERIAL> if not overridden for the block. |
-| launchpad.materialVelocities.<MATERIAL>.verticalVelocity   | Decimal number | The vertical (sideways) velocity applied to launchpads of type <MATERIAL> if not overridden for the block.   |
+| Node                                                       | Type           | Description                                                                                                                                                             |
+|------------------------------------------------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| launchpad.materials                                        | List           | A list of materials, or material tags (+TAG_NAME), which are always treated as launchpads, without the need for manual registration.                                    |
+| launchpad.materialWhitelist                                | List           | A list of materials, or material tags (+TAG_NAME), which can be manually turned into launchpads. Use this to prevent unwanted blocks from being turned into launchpads. |
+| launchpad.verticalVelocity                                 | Decimal number | The vertical (upwards) velocity applied to launchpads if not specified otherwise.                                                                                       |
+| launchpad.horizontalVelocity                               | Decimal number | The horizontal (sideways) velocity applied to launchpads if not specified otherwise.                                                                                    |
+| launchpad.materialVelocities.<MATERIAL>.horizontalVelocity | Decimal number | The horizontal (sideways) velocity applied to launchpads of type <MATERIAL> if not overridden for the block.                                                            |
+| launchpad.materialVelocities.<MATERIAL>.verticalVelocity   | Decimal number | The vertical (sideways) velocity applied to launchpads of type <MATERIAL> if not overridden for the block.                                                              |

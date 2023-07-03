@@ -1,5 +1,6 @@
 package net.knarcraft.launchpad.listener;
 
+import net.knarcraft.launchpad.Launchpad;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlock;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
 import net.knarcraft.launchpad.launchpad.ModificationRequest;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A listener for application of launchpad requests
@@ -27,19 +29,31 @@ public class LaunchpadModifyListener implements Listener {
             return;
         }
 
-        Set<ModificationRequest> requests = ModificationRequestHandler.getRequests(event.getPlayer().getUniqueId());
+        UUID playerId = event.getPlayer().getUniqueId();
+        Set<ModificationRequest> requests = ModificationRequestHandler.getRequests(playerId);
         if (requests == null || requests.isEmpty()) {
             return;
         }
 
+        boolean completeSuccess = true;
         for (ModificationRequest request : requests) {
-            handleRequest(request, clicked);
+            boolean success = handleRequest(request, clicked);
+            if (!success) {
+                completeSuccess = false;
+                // Re-schedule the request to allow the player to click a valid block
+                ModificationRequestHandler.addRequest(playerId, request);
+            }
         }
 
-        event.setUseItemInHand(Event.Result.DENY);
-        event.setUseInteractedBlock(Event.Result.DENY);
+        if (completeSuccess) {
+            event.setUseItemInHand(Event.Result.DENY);
+            event.setUseInteractedBlock(Event.Result.DENY);
 
-        event.getPlayer().sendMessage("Modified launchpad at " + clicked.getLocation());
+            event.getPlayer().sendMessage("Modified launchpad!");
+        } else {
+            event.getPlayer().sendMessage("The block could not be modified, as it's not whitelisted. If you want " +
+                    "to abort changing a launchpad, use \"/launchpad abort\"");
+        }
     }
 
     /**
@@ -47,19 +61,27 @@ public class LaunchpadModifyListener implements Listener {
      *
      * @param request <p>The modification request to handle</p>
      * @param block   <p>The block to perform the request on</p>
+     * @return <p>True if the request was successfully handled</p>
      */
-    private void handleRequest(@NotNull ModificationRequest request, @NotNull Block block) {
+    private boolean handleRequest(@NotNull ModificationRequest request, @NotNull Block block) {
         LaunchpadBlock existingLaunchpad = LaunchpadBlockHandler.getLaunchpadBlock(block);
         boolean isLaunchpad = existingLaunchpad != null;
 
         if (!isLaunchpad) {
+            // Only allow modification of whitelisted launchpad materials
+            if (!Launchpad.getInstance().getConfiguration().isMaterialWhitelisted(block.getType())) {
+                return false;
+            }
+
             existingLaunchpad = new LaunchpadBlock(block);
         }
 
         switch (request.modificationAction()) {
             case REMOVE -> {
-                LaunchpadBlockHandler.unregisterLaunchpadBlock(block);
-                return;
+                if (isLaunchpad) {
+                    LaunchpadBlockHandler.unregisterLaunchpadBlock(block);
+                    return true;
+                }
             }
             case VERTICAL_VELOCITY -> {
                 if (request.value() != null) {
@@ -91,6 +113,8 @@ public class LaunchpadModifyListener implements Listener {
             // Save if the existing launchpad was modified
             LaunchpadBlockHandler.saveAll();
         }
+
+        return true;
     }
 
 }
