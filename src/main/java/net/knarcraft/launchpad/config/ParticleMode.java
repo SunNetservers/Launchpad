@@ -30,4 +30,9 @@ public enum ParticleMode {
      */
     SPHERE,
 
+    /**
+     * Spawns the set amount of particles in a cube centered on the block
+     */
+    CUBE,
+
 }

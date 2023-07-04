@@ -25,7 +25,7 @@ launchpad:
   particles:
     # Whether to enable particles above launchpads
     enabled: false
-    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE, PYRAMID, SPHERE and CIRCLE
+    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE, PYRAMID, SPHERE, CUBE and CIRCLE
     mode: SQUARE
     # The type of particle to spawn. See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
     type: DRIP_LAVA

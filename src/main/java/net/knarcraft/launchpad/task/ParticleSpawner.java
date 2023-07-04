@@ -64,6 +64,7 @@ public class ParticleSpawner implements Runnable {
                 case CIRCLE -> drawCircle(world, location);
                 case PYRAMID -> drawPyramid(world, location);
                 case SPHERE -> drawSphere(world, location);
+                case CUBE -> drawCube(world, location);
             }
         }
     }
@@ -79,6 +80,26 @@ public class ParticleSpawner implements Runnable {
             return materialConfig;
         }
         return this.particleConfig;
+    }
+
+    /**
+     * Spawns a cube of particles at the given location
+     *
+     * @param world    <p>The world to spawn the particles in</p>
+     * @param location <p>The location of the block to spawn the particles at</p>
+     */
+    private void drawCube(@NotNull World world, @NotNull Location location) {
+        // Draw the top and bottom of the cube
+        drawSquare(world, location);
+        drawSquare(world, location.clone().add(0, 1, 0));
+
+        for (float y = 0; y <= 1; y += getParticleConfig().getParticleDensity()) {
+            double height = getParticleConfig().getHeightOffset() + y;
+            spawnParticle(world, location.clone().add(0, height, 0));
+            spawnParticle(world, location.clone().add(0, height, 1));
+            spawnParticle(world, location.clone().add(1, height, 0));
+            spawnParticle(world, location.clone().add(1, height, 1));
+        }
     }
 
     /**
