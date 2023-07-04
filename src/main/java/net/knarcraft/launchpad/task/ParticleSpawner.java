@@ -149,7 +149,7 @@ public class ParticleSpawner implements Runnable {
         }
 
         Location topLocation = location.clone().add(pyramidVectors[0]);
-        for (double x = 0; x <= 1; x += particleDensity) {
+        for (double x = 0; x <= 1.2; x += particleDensity) {
             spawnParticle(world, topLocation.clone().add(pyramidVectors[1].clone().multiply(x)));
             spawnParticle(world, topLocation.clone().add(pyramidVectors[2].clone().multiply(x)));
             spawnParticle(world, topLocation.clone().add(pyramidVectors[3].clone().multiply(x)));
