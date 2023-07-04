@@ -25,17 +25,17 @@ launchpad:
   particles:
     # Whether to enable particles above launchpads
     enabled: false
-    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE and CIRCLE
+    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE, PYRAMID, SPHERE and CIRCLE
     mode: SQUARE
     # The type of particle to spawn. See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
     type: DRIP_LAVA
     # The number of particles to spawn every second
     amount: 1
-    # The offset of the particle in the X direction, relative to the launchpad
+    # The offset, or spread of the particles in the X direction, relative to the launchpad
     offsetX: 0
-    # The offset of the particle in the Y direction, relative to the launchpad
+    # The offset, or spread of the particles in the Y direction, relative to the launchpad
     offsetY: 0
-    # The offset of the particle in the Z direction, relative to the launchpad
+    # The offset, or spread of the particles in the Z direction, relative to the launchpad
     offsetZ: 0
     # The height above the launchpad the particle should spawn. 1 = one block above, 0.5 = half a block above
     heightOffset: 0.5
@@ -45,3 +45,6 @@ launchpad:
     particleDensity: 0.5
     # Extra data for the particle. Valid values depend on the particle type.
     extra: 0
+    # The amount of ticks between each time the particle(s) should be set again. Depending on the particle, higher
+    # values will make the particle(s) completely disappear and reappear.
+    spawnDelay: 20

@@ -21,8 +21,13 @@ public enum ParticleMode {
     CIRCLE,
 
     /**
-     * Spawns the set amount of particles in a triangle centered on the block
+     * Spawns the set amount of particles in a pyramid centered on the block
      */
     PYRAMID,
+
+    /**
+     * Spawns the set amount of particles in a sphere centered on the block
+     */
+    SPHERE,
 
 }

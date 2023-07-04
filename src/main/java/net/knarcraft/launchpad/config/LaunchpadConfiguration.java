@@ -161,6 +161,7 @@ public class LaunchpadConfiguration {
         double heightOffset = particlesSection.getDouble("heightOffset", 0.5);
         double particleDensity = particlesSection.getDouble("particleDensity", 0.1);
         double extra = particlesSection.getDouble("extra", 0);
+        int spawnDelay = particlesSection.getInt("spawnDelay", 20);
         ParticleMode particleMode;
         try {
             particleMode = ParticleMode.valueOf(particlesSection.getString("mode"));
@@ -184,7 +185,7 @@ public class LaunchpadConfiguration {
             // Start particle spawning
             particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
                     new ParticleSpawner(particleMode, particleType, particleAmount, particleDensity, heightOffset,
-                            offsetX, offsetY, offsetZ, extra), 20, 20);
+                            offsetX, offsetY, offsetZ, extra), 20, spawnDelay);
         }
     }
 
