@@ -1,64 +1,43 @@
 package net.knarcraft.launchpad.task;
 
-import net.knarcraft.launchpad.config.ParticleMode;
+import net.knarcraft.launchpad.config.LaunchpadParticleConfig;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlock;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
 import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 /**
  * A runnable tasks that spawns particles at every launchpad
  */
 public class ParticleSpawner implements Runnable {
 
-    private final ParticleMode particleMode;
-    private final Particle particleType;
-    private final int particleAmount;
-    private final double particleDensity;
-    private final double heightOffset;
-    private final double offsetX;
-    private final double offsetY;
-    private final double offsetZ;
-    private final double extra;
-
     private Vector[] pyramidVectors;
     private double[][] circleCoordinates;
     private double[][] sphereCoordinates;
 
+    private final LaunchpadParticleConfig particleConfig;
+    private final Map<Material, LaunchpadParticleConfig> materialConfigs;
     private LaunchpadBlock processingLaunchpad = null;
 
     /**
      * Instantiates a new particle spawner
      *
-     * @param particleMode    <p>The mode used when spawning particles</p>
-     * @param particleType    <p>The type of particle to spawn</p>
-     * @param particleAmount  <p>The amount of particles to spawn at once</p>
-     * @param particleDensity <p>The density of particles for particle shapes. Lower = more particles.</p>
-     * @param heightOffset    <p>The height above the launchpad the particle should spawn</p>
-     * @param offsetX         <p>The offset of the particle in the X direction</p>
-     * @param offsetY         <p>The offset of the particle in the Y direction</p>
-     * @param offsetZ         <p>The offset of the particle in the Z direction</p>
-     * @param extra           <p>Extra data for the particle</p>
+     * @param particleConfig <p>The configuration for the particle to spawn</p>
      */
-    public ParticleSpawner(@NotNull ParticleMode particleMode, @NotNull Particle particleType, int particleAmount,
-                           double particleDensity, double heightOffset, double offsetX, double offsetY, double offsetZ,
-                           double extra) {
-        this.particleMode = particleMode;
-        this.particleType = particleType;
-        this.particleAmount = particleAmount;
-        this.particleDensity = particleDensity;
-        this.heightOffset = heightOffset;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.offsetZ = offsetZ;
-        this.extra = extra;
+    public ParticleSpawner(LaunchpadParticleConfig particleConfig, Map<Material,
+            LaunchpadParticleConfig> materialConfigs) {
+        this.particleConfig = particleConfig;
+        this.materialConfigs = materialConfigs;
 
         this.pyramidVectors = null;
         this.circleCoordinates = null;
+        this.sphereCoordinates = null;
     }
 
     @Override
@@ -78,14 +57,28 @@ public class ParticleSpawner implements Runnable {
             // Store the currently processed launchpad for height calculation
             processingLaunchpad = launchpad;
 
-            switch (particleMode) {
-                case SINGLE -> spawnParticle(world, location.clone().add(0.5, heightOffset, 0.5));
+            switch (getParticleConfig().getParticleMode()) {
+                case SINGLE -> spawnParticle(world, location.clone().add(
+                        0.5, getParticleConfig().getHeightOffset(), 0.5));
                 case SQUARE -> drawSquare(world, location);
                 case CIRCLE -> drawCircle(world, location);
                 case PYRAMID -> drawPyramid(world, location);
                 case SPHERE -> drawSphere(world, location);
             }
         }
+    }
+
+    /**
+     * Gets the particle config to use for the current launchpad's material
+     *
+     * @return <p>The particle config to use</p>
+     */
+    private LaunchpadParticleConfig getParticleConfig() {
+        LaunchpadParticleConfig materialConfig = this.materialConfigs.get(processingLaunchpad.getBlock().getType());
+        if (materialConfig != null) {
+            return materialConfig;
+        }
+        return this.particleConfig;
     }
 
     /**
@@ -97,7 +90,7 @@ public class ParticleSpawner implements Runnable {
     private void drawSphere(@NotNull World world, @NotNull Location location) {
         // For spheres, densities below 0.1 has weird bugs such as blinking in and out of existence, and floating point
         // errors when calculating the length of circleCoordinates
-        double density = Math.max(1, particleDensity);
+        double density = Math.max(1, getParticleConfig().getParticleDensity());
         // Store calculations for improved efficiency
         if (sphereCoordinates == null) {
             int length = (int) Math.ceil((180 / density));
@@ -108,11 +101,11 @@ public class ParticleSpawner implements Runnable {
                     continue;
                 }
                 sphereCoordinates[i++] = new double[]{(0.5 * Math.sin(x)) + 0.5,
-                        heightOffset + 0.5, (0.5 * Math.cos(x)) + 0.5};
+                        getParticleConfig().getHeightOffset() + 0.5, (0.5 * Math.cos(x)) + 0.5};
                 sphereCoordinates[i++] = new double[]{(0.5 * Math.sin(x)) + 0.5,
-                        heightOffset + 0.5 + (0.5 * Math.cos(x)), 0.5};
+                        getParticleConfig().getHeightOffset() + 0.5 + (0.5 * Math.cos(x)), 0.5};
                 sphereCoordinates[i++] = new double[]{0.5,
-                        heightOffset + 0.5 + (0.5 * Math.sin(x)), (0.5 * Math.cos(x)) + 0.5};
+                        getParticleConfig().getHeightOffset() + 0.5 + (0.5 * Math.sin(x)), (0.5 * Math.cos(x)) + 0.5};
             }
         }
 
@@ -135,12 +128,12 @@ public class ParticleSpawner implements Runnable {
         // Store calculations for improved efficiency
         if (pyramidVectors == null) {
             // The 0.5 offsets are required for the angle of the pyramid's 4 lines to be correct
-            double coordinateMin = -0.5 * heightOffset;
-            double coordinateMax = 1 + (0.5 * heightOffset);
+            double coordinateMin = -0.5 * getParticleConfig().getHeightOffset();
+            double coordinateMax = 1 + (0.5 * getParticleConfig().getHeightOffset());
 
             pyramidVectors = new Vector[5];
             // The vector from the origin to the top of the pyramid
-            pyramidVectors[0] = new Vector(0.5, 1 + heightOffset, 0.5);
+            pyramidVectors[0] = new Vector(0.5, 1 + getParticleConfig().getHeightOffset(), 0.5);
             // The vectors from the top of the pyramid towards each corner
             pyramidVectors[1] = new Vector(coordinateMin, 0, coordinateMin).subtract(pyramidVectors[0]).normalize();
             pyramidVectors[2] = new Vector(coordinateMax, 0, coordinateMin).subtract(pyramidVectors[0]).normalize();
@@ -149,7 +142,7 @@ public class ParticleSpawner implements Runnable {
         }
 
         Location topLocation = location.clone().add(pyramidVectors[0]);
-        for (double x = 0; x <= 1.2; x += particleDensity) {
+        for (double x = 0; x <= 1.2; x += getParticleConfig().getParticleDensity()) {
             spawnParticle(world, topLocation.clone().add(pyramidVectors[1].clone().multiply(x)));
             spawnParticle(world, topLocation.clone().add(pyramidVectors[2].clone().multiply(x)));
             spawnParticle(world, topLocation.clone().add(pyramidVectors[3].clone().multiply(x)));
@@ -166,7 +159,7 @@ public class ParticleSpawner implements Runnable {
     private void drawCircle(@NotNull World world, @NotNull Location location) {
         // For circles, densities below 0.1 has weird bugs such as blinking in and out of existence, and floating point
         // errors when calculating the length of circleCoordinates
-        double density = Math.max(1, particleDensity);
+        double density = Math.max(1, getParticleConfig().getParticleDensity());
         // Store calculations for improved efficiency
         if (circleCoordinates == null) {
             circleCoordinates = new double[(int) Math.ceil((180 / density))][];
@@ -181,7 +174,7 @@ public class ParticleSpawner implements Runnable {
 
         // Spawn particles on the stored locations, relative to the launchpad
         for (double[] circleCoordinate : circleCoordinates) {
-            spawnParticle(world, location.clone().add(circleCoordinate[0], heightOffset, circleCoordinate[1]));
+            spawnParticle(world, location.clone().add(circleCoordinate[0], getParticleConfig().getHeightOffset(), circleCoordinate[1]));
         }
     }
 
@@ -192,11 +185,11 @@ public class ParticleSpawner implements Runnable {
      * @param location <p>The location of the block to spawn the particles at</p>
      */
     private void drawSquare(@NotNull World world, @NotNull Location location) {
-        for (float x = 0; x <= 1; x += particleDensity) {
-            spawnParticle(world, location.clone().add(x, heightOffset, 0));
-            spawnParticle(world, location.clone().add(x, heightOffset, 1));
-            spawnParticle(world, location.clone().add(0, heightOffset, x));
-            spawnParticle(world, location.clone().add(1, heightOffset, x));
+        for (float x = 0; x <= 1; x += getParticleConfig().getParticleDensity()) {
+            spawnParticle(world, location.clone().add(x, getParticleConfig().getHeightOffset(), 0));
+            spawnParticle(world, location.clone().add(x, getParticleConfig().getHeightOffset(), 1));
+            spawnParticle(world, location.clone().add(0, getParticleConfig().getHeightOffset(), x));
+            spawnParticle(world, location.clone().add(1, getParticleConfig().getHeightOffset(), x));
         }
     }
 
@@ -207,8 +200,10 @@ public class ParticleSpawner implements Runnable {
      * @param location <p>The location to spawn the particle at</p>
      */
     private void spawnParticle(@NotNull World world, @NotNull Location location) {
-        world.spawnParticle(particleType, location.add(0, getBlockHeight(processingLaunchpad), 0), particleAmount,
-                offsetX, offsetY, offsetZ, extra);
+        world.spawnParticle(getParticleConfig().getParticleType(),
+                location.add(0, getBlockHeight(processingLaunchpad), 0), getParticleConfig().getParticleAmount(),
+                getParticleConfig().getOffsetX(), getParticleConfig().getOffsetY(), getParticleConfig().getOffsetZ(),
+                getParticleConfig().getExtra());
     }
 
     /**

@@ -48,3 +48,6 @@ launchpad:
     # The amount of ticks (1 second = 20 ticks) between each time the particle(s) should be spawned again. Depending on
     # the particle, higher values will make the particle(s) completely disappear and reappear.
     spawnDelay: 20
+    # Particle configurations per material. So you'd set materialParticles.LIGHT_WEIGHTED_PRESSURE_PLATE.type to set the
+    # particle type for LIGHT_WEIGHTED_PRESSURE_PLATE.
+    materialParticles: [ ]

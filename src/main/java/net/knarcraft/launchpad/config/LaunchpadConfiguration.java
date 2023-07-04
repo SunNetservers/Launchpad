@@ -6,13 +6,14 @@ import net.knarcraft.launchpad.task.ParticleSpawner;
 import net.knarcraft.launchpad.util.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -148,45 +149,51 @@ public class LaunchpadConfiguration {
         }
         boolean previousEnabled = this.particlesEnabled;
         this.particlesEnabled = particlesSection.getBoolean("enabled", false);
-        @NotNull Particle particleType;
-        try {
-            particleType = Particle.valueOf(particlesSection.getString("type"));
-        } catch (IllegalArgumentException exception) {
-            particleType = Particle.ASH;
-        }
-        int particleAmount = particlesSection.getInt("amount", 30);
-        double offsetX = particlesSection.getDouble("offsetX", 0.5);
-        double offsetY = particlesSection.getDouble("offsetY", 1);
-        double offsetZ = particlesSection.getDouble("offsetZ", 0.5);
-        double heightOffset = particlesSection.getDouble("heightOffset", 0.5);
-        double particleDensity = particlesSection.getDouble("particleDensity", 0.1);
-        double extra = particlesSection.getDouble("extra", 0);
-        int spawnDelay = particlesSection.getInt("spawnDelay", 20);
-        ParticleMode particleMode;
-        try {
-            particleMode = ParticleMode.valueOf(particlesSection.getString("mode"));
-        } catch (IllegalArgumentException exception) {
-            particleMode = ParticleMode.SINGLE;
-        }
 
-        // Make sure particle density is between 1 (inclusive) and 0 (exclusive)
-        if (particleDensity <= 0) {
-            particleDensity = 0.1;
-        } else if (particleDensity > 360) {
-            particleDensity = 360;
-        }
-
+        // Cancel previous particle spawning task if previously enabled
         if (previousEnabled) {
-            // Cancel previous particle spawning task
             Bukkit.getScheduler().cancelTask(particleTaskId);
         }
 
+        // Start particle spawning if enabled
         if (this.particlesEnabled) {
-            // Start particle spawning
+            LaunchpadParticleConfig particleConfig = new LaunchpadParticleConfig(particlesSection);
+
+            // Load any per-material configuration options
+            Map<Material, LaunchpadParticleConfig> materialConfigs;
+            ConfigurationSection perMaterialSection = particlesSection.getConfigurationSection("materialParticles");
+            if (perMaterialSection != null) {
+                materialConfigs = loadMaterialParticleConfigs(perMaterialSection);
+            } else {
+                materialConfigs = new HashMap<>();
+            }
+
             particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
-                    new ParticleSpawner(particleMode, particleType, particleAmount, particleDensity, heightOffset,
-                            offsetX, offsetY, offsetZ, extra), 20, spawnDelay);
+                    new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
         }
+    }
+
+    /**
+     * Loads all per-material particle configuration options
+     *
+     * @param perMaterialSection <p>The configuration section containing per-material particle options</p>
+     * @return <p>The loaded per-material particle configuration options</p>
+     */
+    private @NotNull Map<Material, LaunchpadParticleConfig> loadMaterialParticleConfigs(
+            @NotNull ConfigurationSection perMaterialSection) {
+        Map<Material, LaunchpadParticleConfig> materialConfigs = new HashMap<>();
+        for (String key : perMaterialSection.getKeys(false)) {
+            Set<Material> materials = MaterialHelper.loadMaterialString(key);
+            ConfigurationSection materialSection = perMaterialSection.getConfigurationSection(key);
+            if (materialSection == null) {
+                continue;
+            }
+            LaunchpadParticleConfig materialParticleConfig = new LaunchpadParticleConfig(materialSection);
+            for (Material material : materials) {
+                materialConfigs.put(material, materialParticleConfig);
+            }
+        }
+        return materialConfigs;
     }
 
 }

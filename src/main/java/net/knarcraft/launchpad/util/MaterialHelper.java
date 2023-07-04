@@ -33,18 +33,30 @@ public final class MaterialHelper {
                 continue;
             }
 
-            // Try to parse a material tag first
-            if (parseMaterialTag(parsedMaterials, string)) {
-                continue;
-            }
+            parsedMaterials.addAll(loadMaterialString(string));
+        }
+        return parsedMaterials;
+    }
 
-            // Try to parse a material name
-            Material matched = Material.matchMaterial(string);
-            if (matched != null) {
-                parsedMaterials.add(matched);
-            } else {
-                Launchpad.log(Level.WARNING, "&cUnable to parse material: " + string);
-            }
+    /**
+     * Parses a string representing a material or a material tag
+     *
+     * @param materialString <p>The material string to parse</p>
+     * @return <p>The materials defined by the material string, or an empty list if none were found</p>
+     */
+    public static @NotNull Set<Material> loadMaterialString(@NotNull String materialString) {
+        Set<Material> parsedMaterials = new HashSet<>();
+        // Try to parse a material tag first
+        if (parseMaterialTag(parsedMaterials, materialString)) {
+            return parsedMaterials;
+        }
+
+        // Try to parse a material name
+        Material matched = Material.matchMaterial(materialString);
+        if (matched != null) {
+            parsedMaterials.add(matched);
+        } else {
+            Launchpad.log(Level.WARNING, "&cUnable to parse material: " + materialString);
         }
         return parsedMaterials;
     }
