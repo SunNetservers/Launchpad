@@ -14,8 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -107,6 +109,15 @@ public final class LaunchpadBlockHandler {
             Launchpad.log(Level.SEVERE, "Unable to save launchpads. Data loss will occur! Please report " +
                     "details about this problem to the developer.");
         }
+    }
+
+    /**
+     * Gets all stored launchpads
+     *
+     * @return <p>All stored launchpads</p>
+     */
+    public static Set<LaunchpadBlock> getAll() {
+        return new HashSet<>(launchpadBlocks.values());
     }
 
     /**

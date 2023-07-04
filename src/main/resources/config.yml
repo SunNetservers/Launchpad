@@ -21,3 +21,27 @@ launchpad:
     HEAVY_WEIGHTED_PRESSURE_PLATE:
       verticalVelocity: 0.3
       horizontalVelocity: 1
+  # Settings for particles displayed above launchpads
+  particles:
+    # Whether to enable particles above launchpads
+    enabled: false
+    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE and CIRCLE
+    mode: SQUARE
+    # The type of particle to spawn. See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+    type: DRIP_LAVA
+    # The number of particles to spawn every second
+    amount: 1
+    # The offset of the particle in the X direction, relative to the launchpad
+    offsetX: 0
+    # The offset of the particle in the Y direction, relative to the launchpad
+    offsetY: 0
+    # The offset of the particle in the Z direction, relative to the launchpad
+    offsetZ: 0
+    # The height above the launchpad the particle should spawn. 1 = one block above, 0.5 = half a block above
+    heightOffset: 0.5
+    # The density of particles when using square or circle modes. For example, square with density = 1 will have 1
+    # particle for each corner, density = 0.1 will have 10 particles on each side and density = 0.01 will have 100
+    # particles on each side.
+    particleDensity: 0.5
+    # Extra data for the particle. Valid values depend on the particle type.
+    extra: 0
