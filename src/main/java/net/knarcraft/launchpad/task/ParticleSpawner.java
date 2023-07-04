@@ -84,14 +84,14 @@ public class ParticleSpawner implements Runnable {
         drawSquare(world, location);
         // Top: 0.5, 1, 0.5. Corner 1: 0, 0, 0. Corner 2: 1, 0, 0. Corner 3: 0, 0, 1, Corner 4: 1, 0, 1
         double triangleHeight = 1;
-        //TODO: This works fine for heightOffset = 1, but changing the height offset changes things. 0 offset causes
-        // the pyramid to become too wide. 2 offset causes the pyramid to become too narrow.
         Vector topVector = new Vector(0.5, triangleHeight + heightOffset, 0.5);
         Location topLocation = location.clone().add(topVector);
-        Vector line1Direction = new Vector(-0.5, 0, -0.5).subtract(topVector).normalize();
-        Vector line2Direction = new Vector(1.5, 0, -0.5).subtract(topVector).normalize();
-        Vector line3Direction = new Vector(-0.5, 0, 1.5).subtract(topVector).normalize();
-        Vector line4Direction = new Vector(1.5, 0, 1.5).subtract(topVector).normalize();
+        double coordinateMin = -0.5 * heightOffset;
+        double coordinateMax = 1 + (0.5 * heightOffset);
+        Vector line1Direction = new Vector(coordinateMin, 0, coordinateMin).subtract(topVector).normalize();
+        Vector line2Direction = new Vector(coordinateMax, 0, coordinateMin).subtract(topVector).normalize();
+        Vector line3Direction = new Vector(coordinateMin, 0, coordinateMax).subtract(topVector).normalize();
+        Vector line4Direction = new Vector(coordinateMax, 0, coordinateMax).subtract(topVector).normalize();
 
         for (double x = 0; x <= triangleHeight; x += particleDensity) {
             spawnParticle(world, topLocation.clone().add(line1Direction.clone().multiply(x)));
