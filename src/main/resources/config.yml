@@ -62,47 +62,51 @@ launchpad:
     materialParticles: [ ]
     # A whitelist for all particles usable as random trail particles.
     randomTrailWhitelist:
-      - SPELL_WITCH
-      - SOUL
-      - DRIP_WATER
-      - DRIP_LAVA
-      - FALLING_NECTAR
-      - CHERRY_LEAVES
-      - SMALL_FLAME
-      - DRIPPING_HONEY
-      - NAUTILUS
-      - FIREWORKS_SPARK
-      - VILLAGER_ANGRY
-      - WAX_ON
-      - GLOW
-      - DAMAGE_INDICATOR
-      - SNOWFLAKE
-      - WAX_OFF
-      - SPELL
-      - SPELL_INSTANT
-      - SONIC_BOOM
-      - DRAGON_BREATH
-      - SCULK_SOUL
-      - DRIPPING_OBSIDIAN_TEAR
-      - FALLING_OBSIDIAN_TEAR
-      - LANDING_OBSIDIAN_TEAR
-      - EGG_CRACK
-      - ENCHANTMENT_TABLE
-      - CLOUD
-      - END_ROD
-      - EXPLOSION_NORMAL
-      - SMOKE_LARGE
-      - VILLAGER_HAPPY
-      - FLAME
-      - HEART
-      - TOTEM
-      - SNEEZE
       - CAMPFIRE_COSY_SMOKE
-      - FALLING_HONEY
-      - LANDING_HONEY
-      - SOUL_FIRE_FLAME
-      - REVERSE_PORTAL
-      - FALLING_SPORE_BLOSSOM
+      - CHERRY_LEAVES
+      - CLOUD
+      - DAMAGE_INDICATOR
+      - DRAGON_BREATH
+      - DRIP_LAVA
+      - DRIP_WATER
       - DRIPPING_DRIPSTONE_LAVA
       - DRIPPING_DRIPSTONE_WATER
+      - DRIPPING_HONEY
+      - DRIPPING_OBSIDIAN_TEAR
+      - EGG_CRACK
+      - ENCHANTMENT_TABLE
+      - END_ROD
+      - EXPLOSION_NORMAL
+      - FALLING_HONEY
+      - FALLING_NECTAR
+      - FALLING_OBSIDIAN_TEAR
+      - FALLING_SPORE_BLOSSOM
+      - FIREWORKS_SPARK
+      - FLAME
+      - GLOW
+      - HEART
+      - LANDING_HONEY
+      - LANDING_OBSIDIAN_TEAR
+      - NAUTILUS
+      #- NOTE # While cool, it leaves a short trail compared to other particles
+      - REVERSE_PORTAL
       - SCRAPE
+      - SCULK_SOUL
+      - SMALL_FLAME
+      - SMOKE_LARGE
+      #- SMOKE_NORMAL # While cool, it leaves a short trail compared to other particles
+      - SNEEZE
+      - SNOWFLAKE
+      - SONIC_BOOM
+      - SOUL
+      - SOUL_FIRE_FLAME
+      - SPELL
+      - SPELL_INSTANT
+      #- SPELL_MOB # It leaves a short trail compared to other particles
+      - SPELL_WITCH
+      #- SPIT # It leaves a short trail compared to other particles
+      - TOTEM
+      - VILLAGER_ANGRY
+      - VILLAGER_HAPPY
+      - WAX_OFF
+      - WAX_ON
