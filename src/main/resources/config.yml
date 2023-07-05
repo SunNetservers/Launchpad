@@ -28,6 +28,8 @@ launchpad:
     # The type of trail to spawn behind launched players.
     # See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
     trailType: EGG_CRACK
+    # Whether to use a random trail type each time a player is launched instead of the type specified in "trailType".
+    randomTrailType: false
     # Whether to enable particles above launchpads
     enabled: false
     # The amount of ticks (1 second = 20 ticks) between each time the particle(s) should be spawned again. Depending on
@@ -58,3 +60,49 @@ launchpad:
     # Particle configurations per material. So you'd set materialParticles.LIGHT_WEIGHTED_PRESSURE_PLATE.type to set the
     # particle type for LIGHT_WEIGHTED_PRESSURE_PLATE.
     materialParticles: [ ]
+    # A whitelist for all particles usable as random trail particles.
+    randomTrailWhitelist:
+      - SPELL_WITCH
+      - SOUL
+      - DRIP_WATER
+      - DRIP_LAVA
+      - FALLING_NECTAR
+      - CHERRY_LEAVES
+      - SMALL_FLAME
+      - DRIPPING_HONEY
+      - NAUTILUS
+      - FIREWORKS_SPARK
+      - VILLAGER_ANGRY
+      - WAX_ON
+      - GLOW
+      - DAMAGE_INDICATOR
+      - SNOWFLAKE
+      - WAX_OFF
+      - SPELL
+      - SPELL_INSTANT
+      - SONIC_BOOM
+      - DRAGON_BREATH
+      - SCULK_SOUL
+      - DRIPPING_OBSIDIAN_TEAR
+      - FALLING_OBSIDIAN_TEAR
+      - LANDING_OBSIDIAN_TEAR
+      - EGG_CRACK
+      - ENCHANTMENT_TABLE
+      - CLOUD
+      - END_ROD
+      - EXPLOSION_NORMAL
+      - SMOKE_LARGE
+      - VILLAGER_HAPPY
+      - FLAME
+      - HEART
+      - TOTEM
+      - SNEEZE
+      - CAMPFIRE_COSY_SMOKE
+      - FALLING_HONEY
+      - LANDING_HONEY
+      - SOUL_FIRE_FLAME
+      - REVERSE_PORTAL
+      - FALLING_SPORE_BLOSSOM
+      - DRIPPING_DRIPSTONE_LAVA
+      - DRIPPING_DRIPSTONE_WATER
+      - SCRAPE

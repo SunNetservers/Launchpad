@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -190,37 +191,66 @@ public class LaunchpadConfiguration {
 
         // Start particle spawning if enabled
         if (this.particlesEnabled) {
-            ConfigurationSection particleSection = particlesSection.getConfigurationSection("particle");
-            LaunchpadParticleConfig particleConfig = null;
-            if (particleSection != null) {
-                particleConfig = new LaunchpadParticleConfig(particleSection);
-            }
-
-            // Load any per-material configuration options
-            Map<Material, LaunchpadParticleConfig> materialConfigs;
-            ConfigurationSection perMaterialSection = particlesSection.getConfigurationSection("materialParticles");
-            if (perMaterialSection != null) {
-                materialConfigs = loadMaterialParticleConfigs(perMaterialSection);
-            } else {
-                materialConfigs = new HashMap<>();
-            }
-
-            if (particleConfig != null) {
-                particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
-                        new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
-            }
+            loadLaunchpadParticleConfig(particlesSection);
         }
 
         if (this.trailsEnabled) {
-            Particle trailType;
+            loadTrailParticleConfig(particlesSection);
+        }
+    }
+
+    /**
+     * Loads all trail particle-related configuration values
+     *
+     * @param particlesSection <p>The configuration section containing particle options</p>
+     */
+    private void loadTrailParticleConfig(ConfigurationSection particlesSection) {
+        Particle trailType;
+        try {
+            trailType = Particle.valueOf(particlesSection.getString("trailType"));
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            trailType = Particle.EGG_CRACK;
+        }
+        boolean randomTrailType = particlesSection.getBoolean("randomTrailType", false);
+        List<String> randomTrailList = particlesSection.getStringList("randomTrailWhitelist");
+        Set<Particle> randomTrailWhitelist = new HashSet<>();
+        for (String string : randomTrailList) {
             try {
-                trailType = Particle.valueOf(particlesSection.getString("trailType"));
-            } catch (IllegalArgumentException | NullPointerException exception) {
-                trailType = Particle.EGG_CRACK;
+                randomTrailWhitelist.add(Particle.valueOf(string));
+            } catch (IllegalArgumentException exception) {
+                Launchpad.log(Level.WARNING, "Unable to parse particle " + string +
+                        " from the random trail type whitelist.");
             }
-            trailSpawner = new ParticleTrailSpawner(trailType);
-            particleTrailTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
-                    trailSpawner, 20, particlesSection.getInt("trailSpawnDelay", 1));
+        }
+        trailSpawner = new ParticleTrailSpawner(trailType, randomTrailType, new ArrayList<>(randomTrailWhitelist));
+        particleTrailTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
+                trailSpawner, 20, particlesSection.getInt("trailSpawnDelay", 1));
+    }
+
+    /**
+     * Loads all launchpad particle-related configuration values
+     *
+     * @param particlesSection <p>The configuration section containing particle options</p>
+     */
+    private void loadLaunchpadParticleConfig(ConfigurationSection particlesSection) {
+        ConfigurationSection particleSection = particlesSection.getConfigurationSection("particle");
+        LaunchpadParticleConfig particleConfig = null;
+        if (particleSection != null) {
+            particleConfig = new LaunchpadParticleConfig(particleSection);
+        }
+
+        // Load any per-material configuration options
+        Map<Material, LaunchpadParticleConfig> materialConfigs;
+        ConfigurationSection perMaterialSection = particlesSection.getConfigurationSection("materialParticles");
+        if (perMaterialSection != null) {
+            materialConfigs = loadMaterialParticleConfigs(perMaterialSection);
+        } else {
+            materialConfigs = new HashMap<>();
+        }
+
+        if (particleConfig != null) {
+            particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
+                    new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
         }
     }
 

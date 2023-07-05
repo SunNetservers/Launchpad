@@ -12,46 +12,51 @@ public enum ModificationAction {
     /**
      * The action to remove a registered launchpad
      */
-    REMOVE("remove", false),
+    REMOVE("remove", 0),
 
     /**
      * The action to register a launchpad
      */
-    ADD("add", false),
+    ADD("add", 0),
 
     /**
      * The action to modify the vertical velocity of a launchpad
      */
-    VERTICAL_VELOCITY("verticalVelocity", true),
+    VERTICAL_VELOCITY("verticalVelocity", 1),
 
     /**
      * The action to modify the horizontal velocity of a launchpad
      */
-    HORIZONTAL_VELOCITY("horizontalVelocity", true),
+    HORIZONTAL_VELOCITY("horizontalVelocity", 1),
 
     /**
      * The action of setting the fixed direction of a launchpad
      */
-    FIXED_DIRECTION("fixedDirection", true),
+    FIXED_DIRECTION("fixedDirection", 1),
 
     /**
      * The action of aborting previous actions
      */
-    ABORT("abort", false),
+    ABORT("abort", 0),
+
+    /**
+     * The action of setting both velocities at once
+     */
+    VELOCITIES("velocities", 2),
     ;
 
     private final @NotNull String commandName;
-    private final boolean needsArgument;
+    private final int neededArguments;
 
     /**
      * Instantiates a new modification action
      *
-     * @param commandName   <p>The name of the command used to specify this action in command input</p>
-     * @param needsArgument <p>Whether the modification action requires an argument in order to be valid</p>
+     * @param commandName     <p>The name of the command used to specify this action in command input</p>
+     * @param neededArguments <p>The number of arguments required for this modification action</p>
      */
-    ModificationAction(@NotNull String commandName, boolean needsArgument) {
+    ModificationAction(@NotNull String commandName, int neededArguments) {
         this.commandName = commandName;
-        this.needsArgument = needsArgument;
+        this.neededArguments = neededArguments;
     }
 
     /**
@@ -64,12 +69,12 @@ public enum ModificationAction {
     }
 
     /**
-     * Gets whether this modification action requires an argument
+     * The amount of arguments required by this modification action
      *
-     * @return <p>True if this action requires an argument</p>
+     * @return <p>The number of arguments required</p>
      */
-    public boolean needsArgument() {
-        return this.needsArgument;
+    public int neededArguments() {
+        return this.neededArguments;
     }
 
     /**
@@ -82,7 +87,8 @@ public enum ModificationAction {
         if (argument.equalsIgnoreCase("null")) {
             return true;
         }
-        if (this == ModificationAction.HORIZONTAL_VELOCITY || this == ModificationAction.VERTICAL_VELOCITY) {
+        if (this == ModificationAction.HORIZONTAL_VELOCITY || this == ModificationAction.VERTICAL_VELOCITY ||
+                this == ModificationAction.VELOCITIES) {
             try {
                 return Double.parseDouble(argument) >= 0;
             } catch (NumberFormatException exception) {

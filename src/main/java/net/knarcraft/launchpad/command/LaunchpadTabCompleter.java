@@ -28,13 +28,16 @@ public class LaunchpadTabCompleter implements TabCompleter {
         if (arguments.length == 1) {
             // Display available sub-commands
             return TabCompleteHelper.filterMatchingContains(getModificationActions(), arguments[0]);
-        } else if (arguments.length == 2) {
+        } else {
             // If given a valid modification action, and an argument is expected, display possible values
             ModificationAction action = ModificationAction.getFromCommandName(arguments[0]);
-            if (action != null && action.needsArgument()) {
-                return TabCompleteHelper.filterMatchingContains(getTabCompletions(action), arguments[1]);
-            } else {
+            if (action == null || action.neededArguments() + 1 < arguments.length) {
                 return new ArrayList<>();
+            }
+            if (arguments.length == 2) {
+                return TabCompleteHelper.filterMatchingContains(getTabCompletions(action), arguments[1]);
+            } else if (arguments.length == 3) {
+                return TabCompleteHelper.filterMatchingContains(getTabCompletions(action), arguments[2]);
             }
         }
         return new ArrayList<>();
@@ -49,7 +52,7 @@ public class LaunchpadTabCompleter implements TabCompleter {
     private @NotNull List<String> getTabCompletions(@NotNull ModificationAction action) {
         return switch (action) {
             case FIXED_DIRECTION -> getBlockFaces();
-            case HORIZONTAL_VELOCITY, VERTICAL_VELOCITY -> getPositiveDoubles();
+            case HORIZONTAL_VELOCITY, VERTICAL_VELOCITY, VELOCITIES -> getPositiveDoubles();
             default -> new ArrayList<>();
         };
     }

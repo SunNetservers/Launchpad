@@ -7,20 +7,28 @@ have more accurate hit-detection as that's built into Minecraft.
 Launchpads will prioritize values specifically set for that launchpad. If not set, they will look for material-specific
 values. If not set, they will look for the generic velocities in the config.
 
+## Known problems
+
+#### Jumping on a pressure plate causes a `Player moved too quickly` message in the console, and the player is weirdly glitched for a moment
+
+This happens because the server thinks the player moved faster than it should, and forcefully prevents the player from
+moving. Increasing `moved-too-quickly-multiplier` in `spigot.yml` may fix this issue.
+
 ## Commands
 
 Note that changing a property for a block which isn't currently a launchpad will turn the block into a launchpad.
 If you alter several launchpad values in succession, they'll all be applied to the next block you right-click.
 
-| Command                       | Arguments                            | Description                                                                         |
-|-------------------------------|--------------------------------------|-------------------------------------------------------------------------------------|
-| /launchpad add                |                                      | Makes the clicked block into a launchpad.                                           |
-| /launchpad remove             |                                      | Removes the clicked block as a launchpad.                                           |
-| /launchpad abort              |                                      | Clears any unprocessed launchpad modifications.                                     |
-| /launchpad verticalVelocity   | Decimal number / "null"              | Sets the vertical velocity for the clicked launchpad. Use "null" to unset.          |
-| /launchpad horizontalVelocity | Decimal number / "null"              | Sets the horizontal velocity for the clicked launchpad. Use "null" to unset.        |
-| /launchpad fixedDirection     | NORTH / SOUTH / EAST / WEST / "null" | Sets a fixed direction the launchpad will launch every player. Use "null" to unset. |
-| /launchpad:reload             |                                      | Reloads the configuration and launchpads from disk.                                 |
+| Command                       | Arguments                                           | Description                                                                                              |
+|-------------------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| /launchpad add                |                                                     | Makes the clicked block into a launchpad.                                                                |
+| /launchpad remove             |                                                     | Removes the clicked block as a launchpad.                                                                |
+| /launchpad abort              |                                                     | Clears any unprocessed launchpad modifications.                                                          |
+| /launchpad verticalVelocity   | Decimal number / "null"                             | Sets the vertical velocity for the clicked launchpad. Use "null" to unset.                               |
+| /launchpad horizontalVelocity | Decimal number / "null"                             | Sets the horizontal velocity for the clicked launchpad. Use "null" to unset.                             |
+| /launchpad velocities         | <Decimal Number / "null"> <Decimal Number / "null"> | Sets the horizontal and vertical velocities at once.  The first argument is for the horizontal velocity. |
+| /launchpad fixedDirection     | NORTH / SOUTH / EAST / WEST / "null"                | Sets a fixed direction the launchpad will launch every player. Use "null" to unset.                      |
+| /launchpad:reload             |                                                     | Reloads the configuration and launchpads from disk.                                                      |
 
 ## Permissions
 
@@ -43,6 +51,8 @@ If you alter several launchpad values in succession, they'll all be applied to t
 | launchpad.particles.trailsEnabled                           | True / False                                                                  | Whether to enable particle trails behind players                                                                                                                                                                                 |
 | launchpad.particles.trailSpawnDelay                         | Positive integer                                                              | The amount of ticks (1 second = 20 ticks) between each time the particle(s) of a trail should be spawned.                                                                                                                        |
 | launchpad.particles.trailType                               | [Particle](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html) | The type of trail to spawn behind launched players.                                                                                                                                                                              |
+| launchpad.particles.randomTrailType                         | True / False                                                                  | Whether to use a random value from randomTrailWhitelist as the trail on each launch.                                                                                                                                             |
+| launchpad.particles.randomTrailWhitelist                    | List                                                                          | A list of all [particles](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html) selectable for random trails.                                                                                                       |
 | launchpad.particles.enabled                                 | True / False                                                                  | Whether to display some kind of particle effect above manually added launchpads.                                                                                                                                                 |
 | launchpad.particles.spawnDelay                              | Positive integer                                                              | The amount of ticks (1 second = 20 ticks) between each time the particle(s) should be spawned again. Depending on the particle, higher values will make the particle(s) completely disappear and reappear.                       |
 | launchpad.particles.particle.mode                           | SINGLE / SQUARE / PYRAMID / SPHERE / CIRCLE / CUBE                            | The mode used for drawing particles. SINGLE directly spawns the particle(s) in one spot above the launchpad. The other ones spawn particles a bunch of times in a pattern.                                                       |
