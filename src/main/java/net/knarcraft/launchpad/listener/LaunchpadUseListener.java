@@ -60,6 +60,13 @@ public class LaunchpadUseListener implements Listener {
             }
         }
 
+        Player player = event.getPlayer();
+
+        // Remove the player's trail
+        if (player.getVelocity().getY() <= 0) {
+            Launchpad.getInstance().getConfiguration().removeTrail(player.getUniqueId());
+        }
+
         // Pressure plates are detected in onPressurePlateUse instead
         Material type = block.getType();
         if (Tag.PRESSURE_PLATES.isTagged(type)) {
@@ -71,8 +78,6 @@ public class LaunchpadUseListener implements Listener {
         if (launchpad == null && Launchpad.getInstance().getConfiguration().isNotLaunchpadMaterial(type)) {
             return;
         }
-
-        Player player = event.getPlayer();
 
         // Launch the player
         if (launchpad != null) {
@@ -126,6 +131,7 @@ public class LaunchpadUseListener implements Listener {
         direction = direction.normalize().multiply(horizontalVelocity);
         direction = direction.add(new Vector(0, verticalVelocity, 0));
         player.setVelocity(direction);
+        Launchpad.getInstance().getConfiguration().addTrail(player.getUniqueId());
     }
 
     /**

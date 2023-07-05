@@ -25,7 +25,7 @@ public class LaunchpadParticleConfig {
      *
      * @param particlesSection <p>The configuration section containing the particle's settings</p>
      */
-    public LaunchpadParticleConfig(ConfigurationSection particlesSection) {
+    public LaunchpadParticleConfig(@NotNull ConfigurationSection particlesSection) {
         @NotNull Particle particleType;
         try {
             particleType = Particle.valueOf(particlesSection.getString("type"));

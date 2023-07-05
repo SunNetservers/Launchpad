@@ -3,9 +3,11 @@ package net.knarcraft.launchpad.config;
 import net.knarcraft.launchpad.Launchpad;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
 import net.knarcraft.launchpad.task.ParticleSpawner;
+import net.knarcraft.launchpad.task.ParticleTrailSpawner;
 import net.knarcraft.launchpad.util.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -26,7 +29,10 @@ public class LaunchpadConfiguration {
     private double horizontalVelocity;
     private double verticalVelocity;
     private boolean particlesEnabled;
+    private boolean trailsEnabled;
     private int particleTaskId = -1;
+    private int particleTrailTaskId = -1;
+    private ParticleTrailSpawner trailSpawner = null;
     private @NotNull Set<Material> launchpadMaterials = new HashSet<>();
     private @NotNull Set<Material> materialWhitelist = new HashSet<>();
 
@@ -136,6 +142,28 @@ public class LaunchpadConfiguration {
     }
 
     /**
+     * Adds a trail behind the player with the given id
+     *
+     * @param playerId <p>The id of the player to add the trail to</p>
+     */
+    public void addTrail(UUID playerId) {
+        if (trailSpawner != null) {
+            trailSpawner.startTrail(playerId);
+        }
+    }
+
+    /**
+     * Removes the trail behind the player with the given id
+     *
+     * @param playerId <p>The id of the player to remove the trail for</p>
+     */
+    public void removeTrail(UUID playerId) {
+        if (trailSpawner != null) {
+            trailSpawner.removeTrail(playerId);
+        }
+    }
+
+    /**
      * Loads configuration values related to launchpad particles
      *
      * @param launchpadSection <p>The configuration section containing launchpad values</p>
@@ -148,16 +176,25 @@ public class LaunchpadConfiguration {
             return;
         }
         boolean previousEnabled = this.particlesEnabled;
+        boolean previousTrailsEnabled = this.trailsEnabled;
         this.particlesEnabled = particlesSection.getBoolean("enabled", false);
+        this.trailsEnabled = particlesSection.getBoolean("trailsEnabled", false);
 
         // Cancel previous particle spawning task if previously enabled
         if (previousEnabled) {
             Bukkit.getScheduler().cancelTask(particleTaskId);
         }
+        if (previousTrailsEnabled) {
+            Bukkit.getScheduler().cancelTask(particleTrailTaskId);
+        }
 
         // Start particle spawning if enabled
         if (this.particlesEnabled) {
-            LaunchpadParticleConfig particleConfig = new LaunchpadParticleConfig(particlesSection);
+            ConfigurationSection particleSection = particlesSection.getConfigurationSection("particle");
+            LaunchpadParticleConfig particleConfig = null;
+            if (particleSection != null) {
+                particleConfig = new LaunchpadParticleConfig(particleSection);
+            }
 
             // Load any per-material configuration options
             Map<Material, LaunchpadParticleConfig> materialConfigs;
@@ -168,8 +205,22 @@ public class LaunchpadConfiguration {
                 materialConfigs = new HashMap<>();
             }
 
-            particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
-                    new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
+            if (particleConfig != null) {
+                particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
+                        new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
+            }
+        }
+
+        if (this.trailsEnabled) {
+            Particle trailType;
+            try {
+                trailType = Particle.valueOf(particlesSection.getString("trailType"));
+            } catch (IllegalArgumentException | NullPointerException exception) {
+                trailType = Particle.EGG_CRACK;
+            }
+            trailSpawner = new ParticleTrailSpawner(trailType);
+            particleTrailTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
+                    trailSpawner, 20, particlesSection.getInt("trailSpawnDelay", 1));
         }
     }
 

@@ -1,9 +1,7 @@
 launchpad:
   # A list of all materials automatically enabled as a launch-pad. Use +PRESSURE_PLATES for all pressure plates, or 
   # +WOODEN_PRESSURE_PLATES for all wooden pressure plates.
-  materials:
-    - LIGHT_WEIGHTED_PRESSURE_PLATE # This is the gold pressure plate
-    - HEAVY_WEIGHTED_PRESSURE_PLATE # This is the iron pressure plate
+  materials: [ ]
   # A whitelist for the materials that can be manually set as a launchpad. If non-empty, only the materials listed can
   # be clicked after executing "/launchpad add" or a different launchpad-editing command. As with materials, this
   # supports tags like +PRESSURE_PLATES
@@ -23,31 +21,40 @@ launchpad:
       horizontalVelocity: 1
   # Settings for particles displayed above launchpads
   particles:
+    # Whether to enable particle trails behind players
+    trailsEnabled: false
+    # The amount of ticks (1 second = 20 ticks) between each time the particle(s) of a trail should be spawned.
+    trailSpawnDelay: 5
+    # The type of trail to spawn behind launched players.
+    # See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+    trailType: EGG_CRACK
     # Whether to enable particles above launchpads
     enabled: false
-    # The mode used for spawning particles. Valid values are: SINGLE, SQUARE, PYRAMID, SPHERE, CUBE and CIRCLE
-    mode: SQUARE
-    # The type of particle to spawn. See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-    type: DRIP_LAVA
-    # The number of particles to spawn every second
-    amount: 1
-    # The offset, or spread of the particles in the X direction, relative to the launchpad
-    offsetX: 0
-    # The offset, or spread of the particles in the Y direction, relative to the launchpad
-    offsetY: 0
-    # The offset, or spread of the particles in the Z direction, relative to the launchpad
-    offsetZ: 0
-    # The height above the launchpad the particle should spawn. 1 = one block above, 0.5 = half a block above
-    heightOffset: 0.5
-    # The density of particles when using square or circle modes. For example, square with density = 1 will have 1
-    # particle for each corner, density = 0.1 will have 10 particles on each side and density = 0.01 will have 100
-    # particles on each side.
-    particleDensity: 0.5
-    # Extra data for the particle. Valid values depend on the particle type.
-    extra: 0
     # The amount of ticks (1 second = 20 ticks) between each time the particle(s) should be spawned again. Depending on
     # the particle, higher values will make the particle(s) completely disappear and reappear.
     spawnDelay: 20
+    # Options for the particle(s) spawned for each launchpad
+    particle:
+      # The mode used for spawning particles. Valid values are: SINGLE, SQUARE, PYRAMID, SPHERE, CUBE and CIRCLE
+      mode: SINGLE
+      # The type of particle to spawn. See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+      type: ASH
+      # The number of particles to spawn every second
+      amount: 1
+      # The offset, or spread of the particles in the X direction, relative to the launchpad
+      offsetX: 0
+      # The offset, or spread of the particles in the Y direction, relative to the launchpad
+      offsetY: 0
+      # The offset, or spread of the particles in the Z direction, relative to the launchpad
+      offsetZ: 0
+      # The height above the launchpad the particle should spawn. 1 = one block above, 0.5 = half a block above
+      heightOffset: 0.5
+      # The density of particles when using square or circle modes. For example, square with density = 1 will have 1
+      # particle for each corner, density = 0.1 will have 10 particles on each side and density = 0.01 will have 100
+      # particles on each side.
+      particleDensity: 0.1
+      # Extra data for the particle. Valid values depend on the particle type.
+      extra: 0
     # Particle configurations per material. So you'd set materialParticles.LIGHT_WEIGHTED_PRESSURE_PLATE.type to set the
     # particle type for LIGHT_WEIGHTED_PRESSURE_PLATE.
     materialParticles: [ ]
