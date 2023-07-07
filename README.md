@@ -65,3 +65,8 @@ If you alter several launchpad values in succession, they'll all be applied to t
 | launchpad.particles.particle.particleDensity                | Decimal number                                                                | A definition for the number of particles used to draw shapes. The number of particles is basically `distance / particleDensity`, so lower numbers create a more dense shape.                                                     |
 | launchpad.particles.particle.extra                          | Decimal number                                                                | Extra data for the specific particle. Check the Spigot documentation for details.                                                                                                                                                |
 | launchpad.particles.materialParticles                       | Configuration section                                                         | This section allows specifying different particle configurations for a material or a material tag. So you'd set materialParticles.LIGHT_WEIGHTED_PRESSURE_PLATE.type to set the particle type for LIGHT_WEIGHTED_PRESSURE_PLATE. |
+
+## License
+
+Launchpad is licensed under the GNU Public License Version 3.0. This includes every source and resource file. See the
+HEADER file for a more detailed license description.
