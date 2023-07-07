@@ -34,7 +34,6 @@ public class LaunchpadCommand implements CommandExecutor {
 
         // Make sure arguments are correct
         if (arguments.length <= action.neededArguments() || !hasValidArguments(action, arguments)) {
-            //TODO: Perhaps display the current value instead when missing an argument?
             return false;
         }
 
