@@ -1,6 +1,7 @@
 package net.knarcraft.launchpad.command;
 
 import net.knarcraft.launchpad.Launchpad;
+import net.knarcraft.launchpad.config.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -18,7 +19,7 @@ public class ReloadCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Launchpad.getInstance().reload();
-        commandSender.sendMessage("Launchpad reloaded");
+        commandSender.sendMessage(Message.SUCCESS_PLUGIN_RELOADED.getMessage());
         return true;
     }
 

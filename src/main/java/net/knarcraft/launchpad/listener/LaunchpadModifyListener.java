@@ -1,6 +1,7 @@
 package net.knarcraft.launchpad.listener;
 
 import net.knarcraft.launchpad.Launchpad;
+import net.knarcraft.launchpad.config.Message;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlock;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
 import net.knarcraft.launchpad.launchpad.ModificationRequest;
@@ -49,10 +50,9 @@ public class LaunchpadModifyListener implements Listener {
             event.setUseItemInHand(Event.Result.DENY);
             event.setUseInteractedBlock(Event.Result.DENY);
 
-            event.getPlayer().sendMessage("Modified launchpad!");
+            event.getPlayer().sendMessage(Message.SUCCESS_MODIFIED_LAUNCHPAD.getMessage());
         } else {
-            event.getPlayer().sendMessage("The block could not be modified, as it's not whitelisted. If you want " +
-                    "to abort changing a launchpad, use \"/launchpad abort\"");
+            event.getPlayer().sendMessage(Message.ERROR_NOT_WHITELISTED.getMessage());
         }
     }
 

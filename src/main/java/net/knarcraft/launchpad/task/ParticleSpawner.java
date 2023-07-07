@@ -195,7 +195,8 @@ public class ParticleSpawner implements Runnable {
 
         // Spawn particles on the stored locations, relative to the launchpad
         for (double[] circleCoordinate : circleCoordinates) {
-            spawnParticle(world, location.clone().add(circleCoordinate[0], getParticleConfig().getHeightOffset(), circleCoordinate[1]));
+            spawnParticle(world, location.clone().add(circleCoordinate[0], getParticleConfig().getHeightOffset(),
+                    circleCoordinate[1]));
         }
     }
 

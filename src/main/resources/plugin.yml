@@ -5,6 +5,7 @@ api-version: '1.20'
 author: EpicKnarvik97
 description: A plugin that adds customizable launchpads to the game
 website: https://git.knarcraft.net
+prefix: Launchpad
 
 commands:
   reload:
@@ -12,7 +13,10 @@ commands:
     description: Used to reload the Launchpad plugin
     permission: launchpad.reload
   launchpad:
-    usage: /<command> <add | remove | abort | verticalVelocity | horizontalVelocity | fixedDirection> [value]
+    usage: |
+      /<command> <add | remove | abort>
+      /<command> <verticalVelocity | horizontalVelocity | fixedDirection> <value>
+      /<command> velocities <horizontalVelocity> <verticalVelocity>
     description: Used to alter launchpads
     permission: launchpad.modify
 

@@ -1,5 +1,6 @@
 package net.knarcraft.launchpad.command;
 
+import net.knarcraft.launchpad.config.Message;
 import net.knarcraft.launchpad.launchpad.ModificationAction;
 import net.knarcraft.launchpad.launchpad.ModificationRequest;
 import net.knarcraft.launchpad.launchpad.ModificationRequestHandler;
@@ -19,7 +20,7 @@ public class LaunchpadCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s,
                              @NotNull String[] arguments) {
         if (!(commandSender instanceof Player player)) {
-            commandSender.sendMessage("This command can only be used by a player");
+            commandSender.sendMessage(Message.ERROR_PLAYER_ONLY.getMessage());
             return false;
         }
 
@@ -46,7 +47,7 @@ public class LaunchpadCommand implements CommandExecutor {
             case ABORT -> {
                 // Retrieving modification requests also removes them
                 ModificationRequestHandler.getRequests(player.getUniqueId());
-                commandSender.sendMessage("Launchpad modifications cleared");
+                commandSender.sendMessage(Message.SUCCESS_MODIFICATIONS_CLEARED.getMessage());
                 return true;
             }
             case VELOCITIES -> {
@@ -57,7 +58,7 @@ public class LaunchpadCommand implements CommandExecutor {
             }
         }
 
-        commandSender.sendMessage("Right-click the block to modify launchpad properties for");
+        commandSender.sendMessage(Message.SUCCESS_CLICK_BLOCK.getMessage());
         return true;
     }
 

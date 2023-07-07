@@ -97,7 +97,7 @@ launchpad:
       #- SMOKE_NORMAL # While cool, it leaves a short trail compared to other particles
       - SNEEZE
       - SNOWFLAKE
-      - SONIC_BOOM
+      #- SONIC_BOOM # Cool, but a bit short and extreme
       - SOUL
       - SOUL_FIRE_FLAME
       - SPELL
