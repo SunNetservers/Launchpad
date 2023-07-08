@@ -1,18 +1,22 @@
 package net.knarcraft.launchpad.config;
 
+import net.knarcraft.knarlib.particle.ParticleConfig;
+import net.knarcraft.knarlib.particle.ParticleSpawner;
+import net.knarcraft.knarlib.particle.ParticleTrailSpawner;
+import net.knarcraft.knarlib.util.ParticleHelper;
 import net.knarcraft.launchpad.Launchpad;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
-import net.knarcraft.launchpad.task.ParticleSpawner;
-import net.knarcraft.launchpad.task.ParticleTrailSpawner;
 import net.knarcraft.launchpad.util.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +37,7 @@ public class LaunchpadConfiguration {
     private boolean trailsEnabled;
     private int particleTaskId = -1;
     private int particleTrailTaskId = -1;
+    private UUID particleStoredCalculationsId;
     private ParticleTrailSpawner trailSpawner = null;
     private @NotNull Set<Material> launchpadMaterials = new HashSet<>();
     private @NotNull Set<Material> materialWhitelist = new HashSet<>();
@@ -184,6 +189,7 @@ public class LaunchpadConfiguration {
         // Cancel previous particle spawning task if previously enabled
         if (previousEnabled) {
             Bukkit.getScheduler().cancelTask(particleTaskId);
+            ParticleHelper.clearStoredCalculations(particleStoredCalculationsId);
         }
         if (previousTrailsEnabled) {
             Bukkit.getScheduler().cancelTask(particleTrailTaskId);
@@ -234,13 +240,13 @@ public class LaunchpadConfiguration {
      */
     private void loadLaunchpadParticleConfig(ConfigurationSection particlesSection) {
         ConfigurationSection particleSection = particlesSection.getConfigurationSection("particle");
-        LaunchpadParticleConfig particleConfig = null;
+        ParticleConfig particleConfig = null;
         if (particleSection != null) {
-            particleConfig = new LaunchpadParticleConfig(particleSection);
+            particleConfig = new ParticleConfig(particleSection);
         }
 
         // Load any per-material configuration options
-        Map<Material, LaunchpadParticleConfig> materialConfigs;
+        Map<Material, ParticleConfig> materialConfigs;
         ConfigurationSection perMaterialSection = particlesSection.getConfigurationSection("materialParticles");
         if (perMaterialSection != null) {
             materialConfigs = loadMaterialParticleConfigs(perMaterialSection);
@@ -249,9 +255,17 @@ public class LaunchpadConfiguration {
         }
 
         if (particleConfig != null) {
-            particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(),
-                    new ParticleSpawner(particleConfig, materialConfigs), 20, particleConfig.getSpawnDelay());
+            ParticleSpawner particleSpawner = new ParticleSpawner(particleConfig, materialConfigs, this::getLaunchpadBlocks);
+            particleTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Launchpad.getInstance(), particleSpawner,
+                    20, particlesSection.getInt("spawnDelay", 20));
+            particleStoredCalculationsId = particleSpawner.getStoredCalculationId();
         }
+    }
+
+    private Collection<Block> getLaunchpadBlocks() {
+        Set<Block> blocks = new HashSet<>();
+        LaunchpadBlockHandler.getAll().forEach((item) -> blocks.add(item.getBlock()));
+        return blocks;
     }
 
     /**
@@ -260,16 +274,16 @@ public class LaunchpadConfiguration {
      * @param perMaterialSection <p>The configuration section containing per-material particle options</p>
      * @return <p>The loaded per-material particle configuration options</p>
      */
-    private @NotNull Map<Material, LaunchpadParticleConfig> loadMaterialParticleConfigs(
+    private @NotNull Map<Material, ParticleConfig> loadMaterialParticleConfigs(
             @NotNull ConfigurationSection perMaterialSection) {
-        Map<Material, LaunchpadParticleConfig> materialConfigs = new HashMap<>();
+        Map<Material, ParticleConfig> materialConfigs = new HashMap<>();
         for (String key : perMaterialSection.getKeys(false)) {
             Set<Material> materials = MaterialHelper.loadMaterialString(key);
             ConfigurationSection materialSection = perMaterialSection.getConfigurationSection(key);
             if (materialSection == null) {
                 continue;
             }
-            LaunchpadParticleConfig materialParticleConfig = new LaunchpadParticleConfig(materialSection);
+            ParticleConfig materialParticleConfig = new ParticleConfig(materialSection);
             for (Material material : materials) {
                 materialConfigs.put(material, materialParticleConfig);
             }
