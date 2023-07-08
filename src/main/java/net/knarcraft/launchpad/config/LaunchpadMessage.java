@@ -21,11 +21,6 @@ public enum LaunchpadMessage implements TranslatableMessage {
      */
     ERROR_NOT_WHITELISTED,
 
-    /**
-     * The message displayed if an un-parse-able message is given by a user
-     */
-    ERROR_MATERIAL_NOT_PARSE_ABLE,
-
     /* **************** *
      * Success messages *
      * **************** */

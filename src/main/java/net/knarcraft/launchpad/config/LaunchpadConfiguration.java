@@ -3,10 +3,10 @@ package net.knarcraft.launchpad.config;
 import net.knarcraft.knarlib.particle.ParticleConfig;
 import net.knarcraft.knarlib.particle.ParticleSpawner;
 import net.knarcraft.knarlib.particle.ParticleTrailSpawner;
+import net.knarcraft.knarlib.util.MaterialHelper;
 import net.knarcraft.knarlib.util.ParticleHelper;
 import net.knarcraft.launchpad.Launchpad;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
-import net.knarcraft.launchpad.util.MaterialHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -139,7 +139,8 @@ public class LaunchpadConfiguration {
         Set<Material> loadedMaterials = new HashSet<>();
         List<?> materialWhitelist = launchpadSection.getList(key);
         if (materialWhitelist != null) {
-            loadedMaterials.addAll(MaterialHelper.loadMaterialList(materialWhitelist));
+            loadedMaterials.addAll(MaterialHelper.loadMaterialList(materialWhitelist, "+",
+                    Launchpad.getInstance().getLogger()));
         }
         // If a non-block material is specified, simply ignore it
         loadedMaterials.removeIf((item) -> !item.isBlock());
@@ -278,7 +279,7 @@ public class LaunchpadConfiguration {
             @NotNull ConfigurationSection perMaterialSection) {
         Map<Material, ParticleConfig> materialConfigs = new HashMap<>();
         for (String key : perMaterialSection.getKeys(false)) {
-            Set<Material> materials = MaterialHelper.loadMaterialString(key);
+            Set<Material> materials = MaterialHelper.loadMaterialString(key, "+", Launchpad.getInstance().getLogger());
             ConfigurationSection materialSection = perMaterialSection.getConfigurationSection(key);
             if (materialSection == null) {
                 continue;

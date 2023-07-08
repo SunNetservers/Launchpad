@@ -1,7 +1,7 @@
 package net.knarcraft.launchpad.command;
 
+import net.knarcraft.knarlib.util.TabCompletionHelper;
 import net.knarcraft.launchpad.launchpad.ModificationAction;
-import net.knarcraft.launchpad.util.TabCompleteHelper;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ public class LaunchpadTabCompleter implements TabCompleter {
                                       @NotNull String[] arguments) {
         if (arguments.length == 1) {
             // Display available sub-commands
-            return TabCompleteHelper.filterMatchingContains(getModificationActions(), arguments[0]);
+            return TabCompletionHelper.filterMatchingContains(getModificationActions(), arguments[0]);
         } else {
             // If given a valid modification action, and an argument is expected, display possible values
             ModificationAction action = ModificationAction.getFromCommandName(arguments[0]);
@@ -35,9 +35,9 @@ public class LaunchpadTabCompleter implements TabCompleter {
                 return new ArrayList<>();
             }
             if (arguments.length == 2) {
-                return TabCompleteHelper.filterMatchingContains(getTabCompletions(action), arguments[1]);
+                return TabCompletionHelper.filterMatchingContains(getTabCompletions(action), arguments[1]);
             } else if (arguments.length == 3) {
-                return TabCompleteHelper.filterMatchingContains(getTabCompletions(action), arguments[2]);
+                return TabCompletionHelper.filterMatchingContains(getTabCompletions(action), arguments[2]);
             }
         }
         return new ArrayList<>();

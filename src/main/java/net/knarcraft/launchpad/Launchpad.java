@@ -89,8 +89,8 @@ public final class Launchpad extends JavaPlugin {
         this.translator = translator;
         this.stringFormatter = new StringFormatter(this.getDescription().getName(), translator);
         this.stringFormatter.setColorConversion(ColorConversion.RGB);
-        this.stringFormatter.setNamePrefix("#FFE34C[");
-        this.stringFormatter.setNameSuffix("#FFE34C]");
+        this.stringFormatter.setNamePrefix("#FFE34C[&r&l");
+        this.stringFormatter.setNameSuffix("&r#FFE34C]");
 
 
         // Register events
