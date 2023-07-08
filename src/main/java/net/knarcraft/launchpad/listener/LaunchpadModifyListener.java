@@ -1,13 +1,15 @@
 package net.knarcraft.launchpad.listener;
 
+import net.knarcraft.knarlib.formatting.StringFormatter;
 import net.knarcraft.launchpad.Launchpad;
-import net.knarcraft.launchpad.config.Message;
+import net.knarcraft.launchpad.config.LaunchpadMessage;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlock;
 import net.knarcraft.launchpad.launchpad.LaunchpadBlockHandler;
 import net.knarcraft.launchpad.launchpad.ModificationRequest;
 import net.knarcraft.launchpad.launchpad.ModificationRequestHandler;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,13 +48,15 @@ public class LaunchpadModifyListener implements Listener {
             }
         }
 
+        Player player = event.getPlayer();
+        StringFormatter formatter = Launchpad.getInstance().getStringFormatter();
         if (completeSuccess) {
             event.setUseItemInHand(Event.Result.DENY);
             event.setUseInteractedBlock(Event.Result.DENY);
 
-            event.getPlayer().sendMessage(Message.SUCCESS_MODIFIED_LAUNCHPAD.getMessage());
+            formatter.displaySuccessMessage(player, LaunchpadMessage.SUCCESS_MODIFIED_LAUNCHPAD);
         } else {
-            event.getPlayer().sendMessage(Message.ERROR_NOT_WHITELISTED.getMessage());
+            formatter.displayErrorMessage(player, LaunchpadMessage.ERROR_NOT_WHITELISTED);
         }
     }
 

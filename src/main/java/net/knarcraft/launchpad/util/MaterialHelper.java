@@ -1,7 +1,7 @@
 package net.knarcraft.launchpad.util;
 
 import net.knarcraft.launchpad.Launchpad;
-import net.knarcraft.launchpad.config.Message;
+import net.knarcraft.launchpad.config.LaunchpadMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,8 +56,8 @@ public final class MaterialHelper {
         if (matched != null) {
             parsedMaterials.add(matched);
         } else {
-            Launchpad.log(Level.WARNING, Message.ERROR_MATERIAL_NOT_PARSE_ABLE.getMessage("{material}",
-                    materialString));
+            Launchpad.getInstance().getStringFormatter().replacePlaceholder(
+                    LaunchpadMessage.ERROR_MATERIAL_NOT_PARSE_ABLE, "{material}", materialString);
         }
         return parsedMaterials;
     }
@@ -80,8 +79,8 @@ public final class MaterialHelper {
             if (tag != null) {
                 targetSet.addAll(tag.getValues());
             } else {
-                Launchpad.log(Level.WARNING, Message.ERROR_MATERIAL_NOT_PARSE_ABLE.getMessage("{material}",
-                        materialName));
+                Launchpad.getInstance().getStringFormatter().replacePlaceholder(
+                        LaunchpadMessage.ERROR_MATERIAL_NOT_PARSE_ABLE, "{material}", materialName);
             }
             return true;
         }

@@ -1,9 +1,13 @@
 package net.knarcraft.launchpad;
 
+import net.knarcraft.knarlib.formatting.StringFormatter;
+import net.knarcraft.knarlib.formatting.Translator;
+import net.knarcraft.knarlib.property.ColorConversion;
 import net.knarcraft.launchpad.command.LaunchpadCommand;
 import net.knarcraft.launchpad.command.LaunchpadTabCompleter;
 import net.knarcraft.launchpad.command.ReloadCommand;
 import net.knarcraft.launchpad.config.LaunchpadConfiguration;
+import net.knarcraft.launchpad.config.LaunchpadMessage;
 import net.knarcraft.launchpad.listener.LaunchpadBreakListener;
 import net.knarcraft.launchpad.listener.LaunchpadModifyListener;
 import net.knarcraft.launchpad.listener.LaunchpadUseListener;
@@ -24,6 +28,7 @@ public final class Launchpad extends JavaPlugin {
 
     private static Launchpad instance;
     private LaunchpadConfiguration launchpadConfiguration;
+    private StringFormatter stringFormatter;
 
     /**
      * Gets an instance of this plugin
@@ -61,11 +66,29 @@ public final class Launchpad extends JavaPlugin {
         return launchpadConfiguration;
     }
 
+    /**
+     * Gets the string formatter used to format strings
+     *
+     * @return <p>The string formatter</p>
+     */
+    public StringFormatter getStringFormatter() {
+        return this.stringFormatter;
+    }
+
     @Override
     public void onEnable() {
         Launchpad.instance = this;
         getConfig().options().copyDefaults(true);
         saveConfig();
+        Translator translator = new Translator();
+        translator.registerMessageCategory(LaunchpadMessage.ERROR_PLAYER_ONLY);
+        translator.setColorConversion(ColorConversion.RGB);
+        translator.loadLanguages(this.getDataFolder(), "en", "en");
+        this.stringFormatter = new StringFormatter(this.getDescription().getName(), translator);
+        this.stringFormatter.setColorConversion(ColorConversion.RGB);
+        this.stringFormatter.setNamePrefix("#FFE34C[");
+        this.stringFormatter.setNameSuffix("#FFE34C]");
+
 
         // Register events
         Bukkit.getPluginManager().registerEvents(new LaunchpadUseListener(), this);

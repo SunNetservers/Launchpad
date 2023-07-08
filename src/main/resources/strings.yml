@@ -1,0 +1,8 @@
+en:
+  ERROR_PLAYER_ONLY: "&cThis command must be used by a player"
+  ERROR_NOT_WHITELISTED: "&cThe block could not be modified, as it's not whitelisted. If you want to abort changing a launchpad, use \"/launchpad abort\""
+  ERROR_MATERIAL_NOT_PARSE_ABLE: "&cUnable to parse material: {material}"
+  SUCCESS_PLUGIN_RELOADED: "&aPlugin reloaded!"
+  SUCCESS_MODIFICATIONS_CLEARED: "&aCleared your launchpad modification queue"
+  SUCCESS_CLICK_BLOCK: "&aClick the launchpad you want to create or modify"
+  SUCCESS_MODIFIED_LAUNCHPAD: "&aThe clicked block's launchpad properties have been modified"

@@ -1,6 +1,8 @@
 package net.knarcraft.launchpad.command;
 
-import net.knarcraft.launchpad.config.Message;
+import net.knarcraft.knarlib.formatting.StringFormatter;
+import net.knarcraft.launchpad.Launchpad;
+import net.knarcraft.launchpad.config.LaunchpadMessage;
 import net.knarcraft.launchpad.launchpad.ModificationAction;
 import net.knarcraft.launchpad.launchpad.ModificationRequest;
 import net.knarcraft.launchpad.launchpad.ModificationRequestHandler;
@@ -19,8 +21,9 @@ public class LaunchpadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s,
                              @NotNull String[] arguments) {
+        StringFormatter stringFormatter = Launchpad.getInstance().getStringFormatter();
         if (!(commandSender instanceof Player player)) {
-            commandSender.sendMessage(Message.ERROR_PLAYER_ONLY.getMessage());
+            stringFormatter.displayErrorMessage(commandSender, LaunchpadMessage.ERROR_PLAYER_ONLY);
             return false;
         }
 
@@ -46,7 +49,7 @@ public class LaunchpadCommand implements CommandExecutor {
             case ABORT -> {
                 // Retrieving modification requests also removes them
                 ModificationRequestHandler.getRequests(player.getUniqueId());
-                commandSender.sendMessage(Message.SUCCESS_MODIFICATIONS_CLEARED.getMessage());
+                stringFormatter.displaySuccessMessage(commandSender, LaunchpadMessage.SUCCESS_MODIFICATIONS_CLEARED);
                 return true;
             }
             case VELOCITIES -> {
@@ -57,7 +60,7 @@ public class LaunchpadCommand implements CommandExecutor {
             }
         }
 
-        commandSender.sendMessage(Message.SUCCESS_CLICK_BLOCK.getMessage());
+        stringFormatter.displaySuccessMessage(commandSender, LaunchpadMessage.SUCCESS_CLICK_BLOCK);
         return true;
     }
 
