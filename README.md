@@ -66,6 +66,20 @@ If you alter several launchpad values in succession, they'll all be applied to t
 | launchpad.particles.particle.extra                          | Decimal number                                                                | Extra data for the specific particle. Check the Spigot documentation for details.                                                                                                                                                |
 | launchpad.particles.materialParticles                       | Configuration section                                                         | This section allows specifying different particle configurations for a material or a material tag. So you'd set materialParticles.LIGHT_WEIGHTED_PRESSURE_PLATE.type to set the particle type for LIGHT_WEIGHTED_PRESSURE_PLATE. |
 
+## Language customization
+
+Strings shown to users are customizable. If you place a strings.yml file in the plugin folder, it will take
+priority over built-in languages. If you want to change strings, look at Launchpad/src/main/resources/strings.yml for
+the proper keys. All strings have the format: ENUM: "Displayed string". The enum must be identical as it defines which
+string you have changed. All strings belonging to a language are beneath the language code and indented with two spaces.
+
+The easiest way to add a new language is to copy an existing language and paste it into your custom strings.yml and
+change strings as necessary. If you don't include all strings, the remaining will use the built-in English translation.
+Remember to change the language code to whichever you use for your custom language.
+
+The interval messages are unique in that if several values are separated by comma (option1,option2,option3), a random
+message will be chosen each time it's displayed.
+
 ## License
 
 Launchpad is licensed under the GNU Public License Version 3.0. This includes every source and resource file. See the
