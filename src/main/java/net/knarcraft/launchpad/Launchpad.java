@@ -28,6 +28,7 @@ public final class Launchpad extends JavaPlugin {
 
     private static Launchpad instance;
     private LaunchpadConfiguration launchpadConfiguration;
+    private Translator translator;
     private StringFormatter stringFormatter;
 
     /**
@@ -45,6 +46,7 @@ public final class Launchpad extends JavaPlugin {
     public void reload() {
         reloadConfig();
         this.getConfiguration().load(this.getConfig());
+        this.translator.loadLanguages(this.getDataFolder(), "en", getConfig().getString("language", "en"));
     }
 
     /**
@@ -83,7 +85,8 @@ public final class Launchpad extends JavaPlugin {
         Translator translator = new Translator();
         translator.registerMessageCategory(LaunchpadMessage.ERROR_PLAYER_ONLY);
         translator.setColorConversion(ColorConversion.RGB);
-        translator.loadLanguages(this.getDataFolder(), "en", "en");
+        translator.loadLanguages(this.getDataFolder(), "en", getConfig().getString("language", "en"));
+        this.translator = translator;
         this.stringFormatter = new StringFormatter(this.getDescription().getName(), translator);
         this.stringFormatter.setColorConversion(ColorConversion.RGB);
         this.stringFormatter.setNamePrefix("#FFE34C[");
