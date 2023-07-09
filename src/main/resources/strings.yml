@@ -1,7 +1,7 @@
 en:
-  ERROR_PLAYER_ONLY: "&cThis command must be used by a player"
-  ERROR_NOT_WHITELISTED: "&cThe block could not be modified, as it's not whitelisted. If you want to abort changing a launchpad, use \"/launchpad abort\""
-  SUCCESS_PLUGIN_RELOADED: "&aPlugin reloaded!"
-  SUCCESS_MODIFICATIONS_CLEARED: "&aCleared your launchpad modification queue"
-  SUCCESS_CLICK_BLOCK: "&aClick the launchpad you want to create or modify"
-  SUCCESS_MODIFIED_LAUNCHPAD: "&aThe clicked block's launchpad properties have been modified"
+  ERROR_PLAYER_ONLY: "This command must be used by a player"
+  ERROR_NOT_WHITELISTED: "The block could not be modified, as it's not whitelisted. If you want to abort changing a launchpad, use \"/launchpad abort\""
+  SUCCESS_PLUGIN_RELOADED: "Plugin reloaded!"
+  SUCCESS_MODIFICATIONS_CLEARED: "Cleared your launchpad modification queue"
+  SUCCESS_CLICK_BLOCK: "Click the launchpad you want to create or modify"
+  SUCCESS_MODIFIED_LAUNCHPAD: "The clicked block's launchpad properties have been modified"
